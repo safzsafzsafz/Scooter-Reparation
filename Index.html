@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vespa Fix-Up Garage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{--olive:#738849;--oliveD:#5c6e38;--cream:#f4ecd9;--ink:#3a2a22;--pink:#cf9fba;--pinkL:#ecd0dc;--gold:#d9b24c;--navy:#22305a;--denim:#b9cbdc;--tan:#c9a27a;--sage:#a8b98a;--bad:#c9574a;--good:#6f8a3c}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:'Patrick Hand','Comic Sans MS',cursive;color:var(--ink);background:var(--olive);
+ background-image:radial-gradient(ellipse at 20% 15%,rgba(255,255,230,.18),transparent 45%),radial-gradient(ellipse at 85% 80%,rgba(40,50,20,.28),transparent 50%),radial-gradient(ellipse at 70% 20%,rgba(30,40,10,.18),transparent 40%),radial-gradient(ellipse at 10% 90%,rgba(255,255,220,.12),transparent 40%);
+ background-attachment:fixed;min-height:100vh;overflow-x:hidden;-webkit-user-select:none;user-select:none}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;opacity:.55;mix-blend-mode:multiply;
+ background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .25  0 0 0 0 .2  0 0 0 0 .12  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+h1,h2,h3,.hand{font-family:'Gaegu','Patrick Hand',cursive;font-weight:700;margin:0}
+#app{max-width:1240px;margin:0 auto;padding:12px 14px 28px}
+.topbar{display:flex;align-items:center;gap:10px;justify-content:space-between;margin-bottom:10px}
+.brand{font-family:Gaegu;font-weight:700;font-size:28px;color:var(--cream);text-shadow:2px 2px 0 var(--ink);letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--cream);border:2.5px solid var(--ink);border-radius:30px 12px 28px 14px/14px 28px 12px 30px;padding:3px 14px;font-size:20px;box-shadow:2px 3px 0 rgba(58,42,34,.45)}
+.card{background:var(--cream);border:2.5px solid var(--ink);border-radius:20px 7px 22px 9px/9px 22px 7px 20px;box-shadow:4px 5px 0 rgba(58,42,34,.38)}
+.btn{font-family:Gaegu,cursive;font-weight:700;font-size:22px;line-height:1.1;color:var(--ink);background:var(--pinkL);border:2.5px solid var(--ink);border-radius:255px 15px 225px 15px/15px 225px 15px 255px;padding:7px 20px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .08s,box-shadow .08s,background .15s}
+.btn:hover{background:#f4dbe5;transform:translate(-1px,-1px) rotate(-.6deg)}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.gold{background:#f0d58a}.btn.gold:hover{background:#f6e2a8}
+.btn.sage{background:#c8d4ad}.btn.sage:hover{background:#d6e0bf}
+.btn.cream{background:var(--cream)}
+.btn.sm{font-size:17px;padding:4px 12px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.iconbtn{width:40px;height:40px;padding:0;display:inline-grid;place-items:center;font-size:20px}
+.screen{display:none}.screen.on{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ---------- MENU ---------- */
+.hero{position:relative;overflow:hidden;padding:0;aspect-ratio:16/9;max-height:72vh;width:100%}
+.hero svg{width:100%;height:100%;display:block}
+.hero .menuBtns{position:absolute;right:5%;bottom:9%;display:flex;flex-direction:column;gap:12px;align-items:stretch;min-width:210px}
+.hero .menuBtns .btn{font-size:26px}
+.title-wrap{position:absolute;left:4%;top:6%;max-width:58%}
+.title-wrap h1{font-size:clamp(34px,6vw,74px);line-height:.9;color:var(--cream);text-shadow:3px 3px 0 var(--ink),-1px -1px 0 var(--ink),1px -1px 0 var(--ink),-1px 1px 0 var(--ink)}
+.title-wrap p{font-size:clamp(16px,2vw,22px);color:var(--cream);margin:.5em 0 0;text-shadow:1px 1px 0 var(--ink)}
+
+.sectionHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 0 14px}
+.sectionHead h2{font-size:38px;color:var(--cream);text-shadow:2px 2px 0 var(--ink)}
+
+/* ---------- LEVELS ---------- */
+.levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px}
+.lvl{padding:14px 14px 16px;position:relative;cursor:pointer;transition:transform .15s}
+.lvl:nth-child(odd){transform:rotate(-.8deg)}.lvl:nth-child(even){transform:rotate(.7deg)}
+.lvl:hover{transform:rotate(0) translateY(-4px)}
+.lvl .num{position:absolute;top:-14px;left:-10px;width:44px;height:44px;border-radius:50%;background:var(--gold);border:2.5px solid var(--ink);display:grid;place-items:center;font-family:Gaegu;font-weight:700;font-size:24px}
+.lvl svg.ic{width:100%;height:120px;display:block}
+.lvl h3{font-size:26px;margin-top:4px}
+.lvl p{margin:2px 0 8px;font-size:17px;opacity:.8}
+.lvl .stars{font-size:28px;letter-spacing:2px}
+.lvl.locked{filter:grayscale(.7) brightness(.9);cursor:not-allowed}
+.lvl.locked::after{content:"🔒 Finish the previous repair";position:absolute;inset:0;display:grid;place-items:center;background:rgba(58,42,34,.35);color:var(--cream);font-family:Gaegu;font-size:22px;font-weight:700;border-radius:inherit;text-shadow:1px 1px 0 var(--ink)}
+.star{color:#cbbf9f;-webkit-text-stroke:1.5px var(--ink)}.star.on{color:var(--gold)}
+
+/* ---------- PLAY ---------- */
+.playwrap{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:14px;align-items:start}
+@media (max-width:900px){.playwrap{grid-template-columns:1fr}}
+#stage{position:relative;width:100%;aspect-ratio:16/10;overflow:hidden;touch-action:none;container-type:inline-size;border-radius:18px 8px 20px 10px/10px 20px 8px 18px;border:3px solid var(--ink);box-shadow:5px 6px 0 rgba(58,42,34,.45);background:#7d9152}
+#stage>svg,#stage>canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#over{pointer-events:none}
+#cv{display:none;cursor:crosshair}
+#stage.shake{animation:shake .35s}
+@keyframes shake{20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+#tray{position:absolute;left:0;right:0;bottom:1.2cqw;display:flex;justify-content:center;gap:1.2cqw;pointer-events:none}
+.tool{pointer-events:auto;width:9.4cqw;background:var(--cream);border:2.5px solid var(--ink);border-radius:14px 6px 16px 7px/7px 16px 6px 14px;box-shadow:2px 3px 0 rgba(58,42,34,.5);cursor:pointer;padding:.3cqw .3cqw .2cqw;text-align:center;transition:transform .12s;font-family:'Patrick Hand';font-size:max(10px,1.25cqw);line-height:1.05;color:var(--ink)}
+.tool svg{width:5.4cqw;height:5.4cqw;display:block;margin:0 auto}
+.tool:hover{transform:translateY(-4px) rotate(-2deg)}
+.tool.sel{background:#f0d58a;transform:translateY(-6px)}
+.tool.wrong{background:#eab3a8;animation:shake .3s}
+.tool.hintme{animation:bob 1s infinite}
+@keyframes bob{50%{transform:translateY(-8px)}}
+#actions{position:absolute;left:0;right:0;bottom:13.5cqw;display:flex;justify-content:center;gap:1.2cqw;flex-wrap:wrap;pointer-events:none;padding:0 2cqw}
+#actions .btn{pointer-events:auto;font-size:max(14px,2cqw);padding:.6cqw 1.8cqw}
+#actions .btn.hold.on{background:#f0d58a;transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+#toasts{position:absolute;top:2cqw;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5cqw;pointer-events:none;z-index:5}
+.toast{font-family:Gaegu;font-weight:700;font-size:max(14px,2.1cqw);background:var(--cream);border:2.5px solid var(--ink);border-radius:20px 8px 22px 9px/9px 22px 8px 20px;padding:.4cqw 1.6cqw;box-shadow:2px 3px 0 rgba(58,42,34,.5);animation:toast 2.3s forwards;white-space:nowrap}
+.toast.bad{background:#efc2b6}.toast.good{background:#d6e2b6}.toast.meh{background:#f3e2a9}
+@keyframes toast{0%{opacity:0;transform:translateY(-10px) scale(.9)}10%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
+#modal{position:absolute;inset:0;background:rgba(40,30,22,.45);display:grid;place-items:center;z-index:10}
+#modal[hidden]{display:none}
+#modal .card{width:min(86%,640px);padding:2cqw 2.6cqw;display:grid;grid-template-columns:22% 1fr;gap:2cqw;align-items:center}
+#modal h3{font-size:max(20px,3cqw)}
+#modal .txt{font-size:max(15px,2cqw);min-height:6em}
+#modal .dots{display:flex;gap:6px;margin:.6em 0}
+#modal .dots i{width:10px;height:10px;border-radius:50%;border:2px solid var(--ink);display:block}
+#modal .dots i.on{background:var(--pink)}
+#side{padding:12px 14px}
+#side .lvTitle{font-size:28px;line-height:1}
+#side .stats{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+#side .stats .pill{font-size:18px;padding:2px 10px}
+#tasks{list-style:none;padding:0;margin:8px 0 10px;font-size:18px}
+#tasks li{padding:3px 0 3px 30px;position:relative;opacity:.55}
+#tasks li::before{content:"";position:absolute;left:2px;top:6px;width:16px;height:16px;border:2.2px solid var(--ink);border-radius:5px 3px 6px 2px}
+#tasks li.on{opacity:1;font-weight:bold}
+#tasks li.on::before{background:var(--pinkL);animation:bob 1s infinite}
+#tasks li.done{opacity:.85;text-decoration:line-through wavy rgba(58,42,34,.45)}
+#tasks li.done::before{background:var(--sage)}
+#tasks li.done::after{content:"✓";position:absolute;left:4px;top:-2px;font-size:20px;font-weight:bold}
+.hintBox{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:start;margin-top:6px}
+.hintBox .speech{background:#fff9ec;border:2px solid var(--ink);border-radius:16px 6px 18px 6px/6px 18px 6px 16px;padding:8px 10px;font-size:18px;position:relative;min-height:70px}
+.hintBox .speech::before{content:"";position:absolute;left:-10px;top:18px;border:8px solid transparent;border-right-color:var(--ink)}
+#meters{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.meter{font-size:16px}
+.meter .bar{height:14px;border:2px solid var(--ink);border-radius:8px 4px 9px 3px/3px 9px 4px 8px;background:#fff9ec;overflow:hidden;position:relative}
+.meter .bar i{position:absolute;inset:0 auto 0 0;background:var(--sage);width:0;transition:width .15s}
+.meter .bar b{position:absolute;top:0;bottom:0;border-left:2px dashed var(--ink);opacity:.6}
+.meter.warn .bar i{background:#e8a28f}
+.sideBtns{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* svg anims */
+.spinCW{animation:spin 1.1s linear infinite}
+.unscrew{animation:unscrew .6s forwards;transform-box:fill-box;transform-origin:center}
+@keyframes unscrew{to{transform:rotate(-540deg) scale(.4);opacity:0}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fb{transform-box:fill-box;transform-origin:center}
+.foam{animation:foam 1.2s forwards;transform-box:fill-box;transform-origin:center}
+@keyframes foam{0%{transform:scale(.3)}30%{transform:scale(1)}100%{opacity:0;transform:scale(1.2)}}
+.bubble{animation:bub 1.4s ease-out forwards;transform-box:fill-box;transform-origin:center}
+@keyframes bub{0%{transform:scale(.2);opacity:.9}100%{transform:translate(0,-30px) scale(1.4);opacity:0}}
+.puff{animation:puff 1.4s ease-out forwards;transform-box:fill-box;transform-origin:center}
+@keyframes puff{0%{opacity:.75;transform:scale(.4)}100%{opacity:0;transform:translate(-50px,-26px) scale(2.2)}}
+.spark{animation:spark .5s ease-out forwards;transform-box:fill-box;transform-origin:center}
+@keyframes spark{0%{transform:scale(.2);opacity:1}100%{transform:scale(1.6) rotate(40deg);opacity:0}}
+.pulse{animation:pulse 1.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{50%{transform:scale(1.15);opacity:.55}}
+.pointerHand{animation:tapme 1.1s ease-in-out infinite}
+@keyframes tapme{50%{transform:translate(6px,10px)}}
+.vibe{animation:vibe .09s linear infinite}
+@keyframes vibe{50%{transform:translate(1px,-1px)}}
+.blink{animation:blink .6s steps(2) infinite}
+.blinkFast{animation:blink .25s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.flicker{animation:flick .4s infinite}
+@keyframes flick{0%,100%{opacity:.25}30%{opacity:.6}50%{opacity:.1}70%{opacity:.45}}
+.drop{animation:drop 1s ease-in forwards}
+@keyframes drop{to{transform:translateY(60px);opacity:0}}
+.bounceIn{animation:bounceIn .6s cubic-bezier(.3,1.6,.5,1) both;transform-box:fill-box;transform-origin:center}
+@keyframes bounceIn{from{transform:scale(0)}}
+.lbl{font-family:'Patrick Hand';font-size:18px;fill:var(--ink)}
+.lblB{font-family:Gaegu;font-weight:700;font-size:22px;fill:var(--ink)}
+
+/* ---------- RESULTS ---------- */
+.result{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;padding:22px;align-items:center}
+@media (max-width:760px){.result{grid-template-columns:1fr}}
+.result h2{font-size:46px}
+.bigStars{display:flex;gap:10px;margin:8px 0 12px}
+.bigStars svg{width:90px;height:90px}
+.bigStars .s{opacity:.25;transform:scale(.7);transition:all .45s cubic-bezier(.3,1.7,.5,1)}
+.bigStars .s.on{opacity:1;transform:scale(1) rotate(-6deg)}
+.rows{font-size:21px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center}
+.rows .mini{height:10px;border:2px solid var(--ink);border-radius:6px;background:#fff9ec;overflow:hidden}
+.rows .mini i{display:block;height:100%;background:var(--sage)}
+.coinsWon{font-family:Gaegu;font-weight:700;font-size:30px;margin-top:10px}
+.unlocks{margin-top:8px;font-size:19px}
+
+/* ---------- SHOP ---------- */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs .btn{font-size:19px;padding:4px 14px}
+.tabs .btn.on{background:#f0d58a}
+.shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.item{padding:12px;display:flex;flex-direction:column;gap:6px}
+.item .pv{height:110px;display:grid;place-items:center;background:#fbf4e4;border:2px dashed rgba(58,42,34,.35);border-radius:12px}
+.item .pv svg{max-height:104px;max-width:100%}
+.item h3{font-size:23px}
+.item p{margin:0;font-size:16px;opacity:.8;flex:1}
+.item .row{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.tag{font-size:15px;border:2px solid var(--ink);border-radius:10px;padding:1px 8px;background:#d6e2b6}
+.ach{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.ach .card{padding:12px 14px;display:grid;grid-template-columns:54px 1fr;gap:10px;align-items:center}
+.ach .card.off{opacity:.55;filter:grayscale(.8)}
+.ach .medal{width:54px;height:54px}
+.ach h3{font-size:22px}.ach p{margin:0;font-size:16px}
+.footnote{color:var(--cream);opacity:.85;text-align:center;margin-top:16px;font-size:16px;text-shadow:1px 1px 0 var(--ink)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <filter id="rough" x="-4%" y="-4%" width="108%" height="108%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="mottle" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.006" numOctaves="4" seed="11"/><feColorMatrix values="0 0 0 0 0.12  0 0 0 0 0.14  0 0 0 0 0.05  1.6 0 0 0 -0.55"/></filter>
+  <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+  <radialGradient id="glow"><stop offset="0" stop-color="#fff7c8" stop-opacity=".95"/><stop offset=".5" stop-color="#ffe38a" stop-opacity=".45"/><stop offset="1" stop-color="#ffe38a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="glowO"><stop offset="0" stop-color="#ffd27a" stop-opacity="1"/><stop offset="1" stop-color="#ff9c3a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="dentG"><stop offset="0" stop-color="#2a1d16" stop-opacity=".55"/><stop offset=".7" stop-color="#2a1d16" stop-opacity=".2"/><stop offset="1" stop-color="#2a1d16" stop-opacity="0"/></radialGradient>
+  <linearGradient id="pearl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".45" stop-color="#f6d9ff" stop-opacity=".15"/><stop offset="1" stop-color="#cfe9ff" stop-opacity=".35"/></linearGradient>
+  <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+ </defs>
+</svg>
+<div id="app">
+ <div class="topbar">
+  <div class="brand" id="brandBtn" style="cursor:pointer">✶ Vespa Fix-Up Garage</div>
+  <div style="display:flex;gap:8px;align-items:center">
+   <span class="pill" title="Coins"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5" fill="#d9b24c" stroke="#3a2a22" stroke-width="2"/><path d="M12 6.5 L13.6 10.4 L17.6 10.6 L14.5 13.1 L15.6 17 L12 14.8 L8.4 17 L9.5 13.1 L6.4 10.6 L10.4 10.4Z" fill="#f4ecd9" stroke="#3a2a22" stroke-width="1.2"/></svg><b id="coinTxt">0</b></span>
+   <button class="btn cream iconbtn" id="sndBtn" title="Sound on/off">🔊</button>
+  </div>
+ </div>
+
+ <section id="scr-menu" class="screen">
+  <div class="card hero" id="hero"></div>
+  <p class="footnote">Tap, drag, hold and spin your way through five real repair jobs. Earn up to ★★★ on each by working accurately, quickly and with the right tools.</p>
+ </section>
+
+ <section id="scr-levels" class="screen">
+  <div class="sectionHead"><h2>Repair Jobs</h2><div style="display:flex;gap:8px"><button class="btn sage" data-go="shop">Shop</button><button class="btn cream" data-go="ach">Achievements</button><button class="btn cream" data-go="menu">← Garage</button></div></div>
+  <div class="levels" id="levelGrid"></div>
+ </section>
+
+ <section id="scr-shop" class="screen">
+  <div class="sectionHead"><h2>Garage Shop</h2><button class="btn cream" data-go="levels">← Repair Jobs</button></div>
+  <div class="tabs" id="shopTabs"></div>
+  <div class="shop" id="shopGrid"></div>
+ </section>
+
+ <section id="scr-ach" class="screen">
+  <div class="sectionHead"><h2>Achievements</h2><button class="btn cream" data-go="levels">← Repair Jobs</button></div>
+  <div class="ach" id="achGrid"></div>
+ </section>
+
+ <section id="scr-play" class="screen">
+  <div class="playwrap">
+   <div id="stage">
+    <svg id="bg" viewBox="0 0 960 600" preserveAspectRatio="none"></svg>
+    <svg id="scene" viewBox="0 0 960 600"><g id="layer"></g></svg>
+    <canvas id="cv" width="960" height="600"></canvas>
+    <svg id="over" viewBox="0 0 960 600"><g id="overG"></g><g id="cursorG"></g></svg>
+    <div id="actions"></div>
+    <div id="tray"></div>
+    <div id="toasts"></div>
+    <div id="modal" hidden></div>
+   </div>
+   <aside id="side" class="card">
+    <div class="hand" style="font-size:16px;opacity:.7" id="lvNum">Level 1</div>
+    <h2 class="lvTitle" id="lvTitle">Flat Tire</h2>
+    <div class="stats"><span class="pill">⏱ <b id="hudTime">0:00</b></span><span class="pill">✗ <b id="hudMist">0</b></span><span class="pill" title="Par time">par <b id="hudPar">1:20</b></span></div>
+    <ol id="tasks"></ol>
+    <div class="hintBox"><div id="mascotHead"></div><div class="speech" id="hintTxt">Let's go!</div></div>
+    <div id="meters"></div>
+    <div class="sideBtns"><button class="btn cream sm" id="helpBtn">? How to</button><button class="btn cream sm" id="restartBtn">↻ Restart</button><button class="btn cream sm" id="quitBtn">✕ Quit</button></div>
+   </aside>
+  </div>
+ </section>
+
+ <section id="scr-result" class="screen">
+  <div class="card result" id="resultCard"></div>
+ </section>
+</div>
+<script>
+// ================= CORE =================
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const rnd=(a,b)=>a+Math.random()*(b-a), rint=(a,b)=>Math.floor(rnd(a,b+1)), pick=a=>a[Math.floor(Math.random()*a.length)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const NS='http://www.w3.org/2000/svg';
+const INK='#3a2a22';
+const PAL={olive:'#738849',cream:'#f4ecd9',pink:'#cf9fba',pinkL:'#ecd0dc',gold:'#d9b24c',navy:'#22305a',denim:'#b9cbdc',tan:'#c9a27a',brown:'#6b4532',blush:'#f0a5a5',grey:'#bdb6a8',greyD:'#7d776d',rubber:'#3d322d',metal:'#d3cec4',butter:'#f0d58a',sage:'#a8b98a',red:'#c9574a',amber:'#d79a4a',white:'#fbf7ef'};
+const S=(w=2.6)=>`stroke="${INK}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"`;
+const bar=(x1,y1,x2,y2,w,c)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${INK}" stroke-width="${w+4.5}" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`;
+const tube=(d,w,c)=>`<path d="${d}" fill="none" stroke="${INK}" stroke-width="${w+4.5}" stroke-linecap="round" stroke-linejoin="round"/><path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+function starPath(cx,cy,R,ir=.42,n=5,rot=-90){let d='';for(let i=0;i<n*2;i++){const rr=i%2?R*ir:R,a=(rot+i*180/n)*Math.PI/180;d+=(i?'L':'M')+(cx+rr*Math.cos(a)).toFixed(1)+','+(cy+rr*Math.sin(a)).toFixed(1)}return d+'Z'}
+const hexPts=(cx,cy,r)=>Array.from({length:6},(_,i)=>{const a=i*Math.PI/3+Math.PI/6;return (cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1)}).join(' ');
+function arcD(cx,cy,r,a0,a1){const p=a=>[cx+r*Math.cos(a*Math.PI/180),cy+r*Math.sin(a*Math.PI/180)];const [x0,y0]=p(a0),[x1,y1]=p(a1);return `M${x0.toFixed(1)},${y0.toFixed(1)} A${r},${r} 0 ${Math.abs(a1-a0)>180?1:0} 1 ${x1.toFixed(1)},${y1.toFixed(1)}`}
+const hex2rgb=h=>{h=h.replace('#','');return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)]};
+const mix=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];
+const fmtT=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+
+// ---------- SOUND (Web Audio synth) ----------
+const Snd={ctx:null,on:true,loopNodes:null,
+ init(){if(!this.ctx){try{this.ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(this.ctx&&this.ctx.state==='suspended')this.ctx.resume().catch(()=>{})},
+ tone(f,d=.12,type='sine',vol=.12,slide=0,delay=0){if(!this.on||!this.ctx)return;try{const c=this.ctx,t=c.currentTime+delay,o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.linearRampToValueAtTime(Math.max(20,f+slide),t+d);g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0008,t+d);o.connect(g).connect(c.destination);o.start(t);o.stop(t+d+.02)}catch(e){}},
+ noise(d=.3,vol=.08,freq=1500,delay=0,q=.8){if(!this.on||!this.ctx)return;try{const c=this.ctx,t=c.currentTime+delay,len=Math.floor(c.sampleRate*d),b=c.createBuffer(1,len,c.sampleRate),da=b.getChannelData(0);for(let i=0;i<len;i++)da[i]=Math.random()*2-1;const s=c.createBufferSource();s.buffer=b;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=freq;f.Q.value=q;const g=c.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0008,t+d);s.connect(f).connect(g).connect(c.destination);s.start(t)}catch(e){}},
+ click(){this.tone(900,.04,'square',.04)},
+ ratchet(){for(let i=0;i<5;i++)this.tone(1400+i*40,.025,'square',.035,0,i*.06)},
+ clank(){this.tone(210,.18,'triangle',.22,-90);this.noise(.12,.18,3200);this.tone(1600,.08,'sine',.05)},
+ thud(){this.tone(120,.15,'sine',.2,-50);this.noise(.08,.08,500)},
+ ding(){this.tone(880,.15,'sine',.1);this.tone(1320,.3,'sine',.08,0,.1)},
+ buzz(){this.tone(130,.28,'sawtooth',.08,-30)},
+ beep(){this.tone(1180,.16,'square',.05)},
+ hiss(d=.18,v=.05){this.noise(d,v,4500,0,.6)},
+ pop(){this.tone(500,.07,'sine',.1,400)},
+ zap(){this.noise(.15,.15,6000,0,2);this.tone(60,.15,'sawtooth',.06)},
+ squeak(){this.tone(1500,.06,'sine',.05,600)},
+ horn(){this.tone(415,.45,'square',.06);this.tone(523,.45,'square',.05)},
+ sputter(){for(let i=0;i<4;i++){this.tone(60+i*8,.07,'sawtooth',.1,-20,i*.11);this.noise(.06,.06,400,i*.11)}},
+ star(i){this.tone([660,830,990][i]||660,.28,'triangle',.12);this.tone(([660,830,990][i]||660)*2,.2,'sine',.04,0,.05)},
+ coin(){this.tone(1320,.08,'square',.04);this.tone(1760,.18,'square',.04,0,.07)},
+ startLoop(kind){this.stopLoop();if(!this.on||!this.ctx)return;try{const c=this.ctx,o=c.createOscillator(),lfo=c.createOscillator(),lg=c.createGain(),g=c.createGain(),f=c.createBiquadFilter();o.type='sawtooth';o.frequency.value=kind==='engine'?48:120;f.type='lowpass';f.frequency.value=420;lfo.frequency.value=kind==='engine'?13:7;lg.gain.value=.06;g.gain.value=.07;lfo.connect(lg).connect(g.gain);o.connect(f).connect(g).connect(c.destination);o.start();lfo.start();this.loopNodes=[o,lfo,g]}catch(e){}},
+ stopLoop(){if(this.loopNodes){try{this.loopNodes[2].gain.setValueAtTime(0,this.ctx.currentTime);this.loopNodes[0].stop();this.loopNodes[1].stop()}catch(e){}this.loopNodes=null}}
+};
+
+// ---------- SAVE ----------
+const SAVE_KEY='vespaFixUp_v1';
+const G={save:null};
+function defSave(){return{coins:0,best:{},unlocked:1,owned:{model_classic:1,garage_olive:1,color_cream:1,color_pink:1,color_sage:1,color_powder:1,finish_gloss:1,handle_pink:1},eq:{model:'classic',garage:'olive',color:'cream',finish:'gloss',handle:'pink',decals:true},ach:{},tut:{},plays:0,sound:true}}
+function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(s){const d=defSave();G.save=Object.assign(d,s);G.save.eq=Object.assign(defSave().eq,s.eq||{});G.save.owned=Object.assign(defSave().owned,s.owned||{});return}}catch(e){}G.save=defSave()}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(G.save))}catch(e){}}
+const owns=id=>!!G.save.owned[id];
+const hasUpg=id=>owns('tool_'+id);
+
+const COLORS={cream:{name:'Vanilla Cream',hex:'#f4ecd9'},pink:{name:'Dusty Rose',hex:'#dba9c0'},sage:{name:'Sage Meadow',hex:'#a8b98a'},powder:{name:'Powder Blue',hex:'#a9c3dc'},butter:{name:'Butter Yellow',hex:'#f0d58a'},navy:{name:'Midnight Navy',hex:'#33446f'},coral:{name:'Peach Coral',hex:'#e9967e'},mint:{name:'Mint Gelato',hex:'#b7dcc6'},mauve:{name:'Lilac Mauve',hex:'#a98aaa'}};
+const FINISHES={gloss:'Glossy',matte:'Velvet Matte',pearl:'Pearl Shimmer',metallic:'Gold Fleck Metallic'};
+const HANDLES={pink:'#cf9fba',navy:'#33446f',gold:'#d9b24c',sage:'#a8b98a',coral:'#e9967e'};
+const GARAGES={olive:{name:'Olive Grove Garage',wall:'#7d9152',floor:'#5f6f3d',acc:'#cf9fba'},rose:{name:'Rosé Workshop',wall:'#c39aa9',floor:'#8d6876',acc:'#d9b24c'},midnight:{name:'Midnight Atelier',wall:'#3a4870',floor:'#252e4b',acc:'#d9b24c'},seaside:{name:'Seaside Shed',wall:'#88aab8',floor:'#5c7d8b',acc:'#cf9fba'}};
+const MODELS={classic:{name:'Classic',desc:'The everyday darling.'},touring:{name:'Touring',desc:'Windscreen, rack & spare wheel.'},cafe:{name:'Café Racer',desc:'Racing stripe & fly-screen.'}};
+const handle=()=>HANDLES[G.save.eq.handle]||HANDLES.pink;
+
+// ---------- pointer helpers ----------
+function pt(e){const r=$('#stage').getBoundingClientRect();return{x:(e.clientX-r.left)*960/r.width,y:(e.clientY-r.top)*600/r.height}}
+function dragOn(el,h){
+ el.style.cursor='grab';
+ el.addEventListener('pointerdown',e=>{
+  if(!RUN)return;e.preventDefault();e.stopPropagation();Snd.init();
+  const p=pt(e);if(h.down&&h.down(p,e)===false)return;
+  try{el.setPointerCapture(e.pointerId)}catch(_){}
+  const mv=ev=>{h.move&&h.move(pt(ev),ev)};
+  const up=ev=>{el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up);el.removeEventListener('pointercancel',up);h.up&&h.up(pt(ev),ev)};
+  el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+ });
+}
+
+// ---------- surface (canvas grid for sanding / painting / filler) ----------
+class Surface{
+ constructor(pathStr,tf,bb,cell=6){
+  this.cell=cell;const m=new DOMMatrix([tf.s,0,0,tf.s,tf.x,tf.y]);
+  this.path=new Path2D();this.path.addPath(new Path2D(pathStr),m);
+  this.x0=tf.x+bb[0]*tf.s;this.y0=tf.y+bb[1]*tf.s;
+  this.w=Math.ceil((bb[2]-bb[0])*tf.s/cell);this.h=Math.ceil((bb[3]-bb[1])*tf.s/cell);
+  const n=this.w*this.h;this.n=n;this.mask=new Uint8Array(n);this.count=0;
+  const ctx=$('#cv').getContext('2d');ctx.setTransform(1,0,0,1,0,0);
+  for(let j=0;j<this.h;j++)for(let i=0;i<this.w;i++){if(ctx.isPointInPath(this.path,this.x0+(i+.5)*cell,this.y0+(j+.5)*cell)){this.mask[j*this.w+i]=1;this.count++}}
+  this.L={};this.noise=new Float32Array(n);for(let k=0;k<n;k++)this.noise[k]=Math.random();
+  this.off=document.createElement('canvas');this.off.width=this.w;this.off.height=this.h;this.octx=this.off.getContext('2d');this.img=this.octx.createImageData(this.w,this.h);
+ }
+ layer(name,init=0){const a=new Float32Array(this.n);if(typeof init==='function'){for(let k=0;k<this.n;k++)a[k]=init(k)}else a.fill(init);this.L[name]=a;return a}
+ cellXY(k){return{x:this.x0+((k%this.w)+.5)*this.cell,y:this.y0+(Math.floor(k/this.w)+.5)*this.cell}}
+ inside(x,y){const i=Math.floor((x-this.x0)/this.cell),j=Math.floor((y-this.y0)/this.cell);if(i<0||j<0||i>=this.w||j>=this.h)return false;return !!this.mask[j*this.w+i]}
+ each(x,y,r,fn){const c=this.cell,w=this.w;const i0=Math.max(0,Math.floor((x-r-this.x0)/c)),i1=Math.min(w-1,Math.floor((x+r-this.x0)/c)),j0=Math.max(0,Math.floor((y-r-this.y0)/c)),j1=Math.min(this.h-1,Math.floor((y+r-this.y0)/c));
+  for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){const k=j*w+i;if(!this.mask[k])continue;const dx=this.x0+(i+.5)*c-x,dy=this.y0+(j+.5)*c-y,d2=dx*dx+dy*dy;if(d2>r*r)continue;fn(k,1-Math.sqrt(d2)/r)}}
+ frac(fn){let n=0;for(let k=0;k<this.n;k++)if(this.mask[k]&&fn(k))n++;return n/this.count}
+ render(colorFn){const d=this.img.data;for(let k=0;k<this.n;k++){const c=colorFn(k);d[k*4]=c[0];d[k*4+1]=c[1];d[k*4+2]=c[2];d[k*4+3]=255}
+  this.octx.putImageData(this.img,0,0);const cv=$('#cv'),ctx=cv.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,960,600);ctx.save();ctx.clip(this.path);ctx.imageSmoothingEnabled=true;ctx.drawImage(this.off,this.x0,this.y0,this.w*this.cell,this.h*this.cell);ctx.restore()}
+}
+
+// ================= ART =================
+const VP={
+ cowl:'M28,204 C22,160 58,120 120,115 C172,111 208,130 214,168 L216,204 Z',
+ floor:'M212,194 L292,194 L298,207 L212,207 Z',
+ leg:'M284,207 C291,150 299,104 309,64 L334,64 C331,112 333,160 345,207 Z',
+ fender:'M300,216 C300,184 318,168 341,168 C365,168 383,184 383,216 L371,216 C369,195 357,182 341,182 C325,182 313,195 312,216 Z',
+ head:'M290,68 C290,46 318,33 347,39 C360,42 365,54 362,68 Z',
+ seat:'M64,121 C68,100 184,96 198,119 C160,128 102,128 64,121 Z'
+};
+VP.body=VP.cowl+VP.floor+VP.leg+VP.fender+VP.head;
+
+function wheel(cx,cy,r,o={}){
+ let s=o.flat?`<path d="M${cx-r},${cy} A${r},${r} 0 0 1 ${cx+r},${cy} L${cx+r*1.1},${cy+r*.8} Q${cx+r*.9},${cy+r} ${cx+r*.6},${cy+r} L${cx-r*.6},${cy+r} Q${cx-r*.9},${cy+r} ${cx-r*1.1},${cy+r*.8} Z" fill="${PAL.rubber}" ${S()}/>`:`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${PAL.rubber}" ${S()}/>`;
+ s+=`<circle cx="${cx}" cy="${cy}" r="${r*.6}" fill="${PAL.cream}" ${S()}/><circle cx="${cx}" cy="${cy}" r="${r*.24}" fill="${PAL.metal}" ${S(2)}/>`;
+ for(let i=0;i<5;i++){const a=(-90+72*i)*Math.PI/180;s+=`<circle cx="${(cx+Math.cos(a)*r*.4).toFixed(1)}" cy="${(cy+Math.sin(a)*r*.4).toFixed(1)}" r="${r*.06}" fill="${PAL.greyD}"/>`}
+ return s;
+}
+function finishFx(path,fin,clipId){
+ if(fin==='matte')return '';
+ if(fin==='pearl')return `<path d="${path}" fill="url(#pearl)"/>`;
+ if(fin==='metallic'){let s='';for(let i=0;i<18;i++)s+=`<circle cx="${rnd(40,360).toFixed(0)}" cy="${rnd(60,200).toFixed(0)}" r="${rnd(.8,1.8).toFixed(1)}" fill="${PAL.gold}" opacity=".8"/>`;return `<g clip-path="url(#${clipId})">${s}</g>`}
+ return '';
+}
+function cowlSVG(col,o={}){
+ const e=G.save.eq,dec=o.decals!==undefined?o.decals:e.decals,model=o.model||e.model,fin=o.finish||e.finish;
+ let s=`<path d="${VP.cowl}" fill="${col}" ${S()}/>`;
+ if(model==='cafe')s+=`<path d="M34,176 C80,152 160,146 212,160" fill="none" stroke="${INK}" stroke-width="11" stroke-linecap="round"/><path d="M34,176 C80,152 160,146 212,160" fill="none" stroke="${PAL.pink}" stroke-width="6.5" stroke-linecap="round"/>`;
+ if(dec)s+=`<path d="${starPath(92,162,20,.4)}" fill="${PAL.pink}" ${S(2)} transform="rotate(12 92 162)"/><path d="${starPath(168,146,11,.4)}" fill="${PAL.pink}" ${S(1.8)}/>`;
+ if(fin!=='matte')s+=`<path d="M64,140 C88,126 124,121 158,125" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".55"/>`;
+ if(fin==='pearl')s+=`<path d="${VP.cowl}" fill="url(#pearl)"/>`;
+ if(fin==='metallic')for(let i=0;i<10;i++)s+=`<circle cx="${rnd(50,200).toFixed(0)}" cy="${rnd(130,195).toFixed(0)}" r="1.4" fill="${PAL.gold}"/>`;
+ if(o.dents)o.dents.forEach(d=>s+=`<ellipse cx="${d[0]}" cy="${d[1]}" rx="${d[2]}" ry="${d[2]*.7}" fill="url(#dentG)"/><path d="M${d[0]-d[2]*.8},${d[1]-d[2]*.3} Q${d[0]},${d[1]-d[2]*.9} ${d[0]+d[2]*.8},${d[1]-d[2]*.3}" fill="none" stroke="#fff" stroke-width="1.6" opacity=".6"/>`);
+ return s;
+}
+function engineMini(){return `<path d="M60,204 C58,176 96,160 140,164 L206,170 L210,204 Z" fill="${PAL.grey}" ${S()}/>`+[0,1,2,3,4].map(i=>`<line x1="${150+i*10}" y1="170" x2="${150+i*10}" y2="200" stroke="${INK}" stroke-width="2"/>`).join('')+`<circle cx="100" cy="190" r="14" fill="${PAL.metal}" ${S(2)}/><rect x="186" y="150" width="9" height="20" fill="${PAL.white}" ${S(2)}/>`}
+function vespa(o={}){
+ const e=G.save.eq,col=o.hex||COLORS[o.color||e.color].hex,model=o.model||e.model,fin=o.finish||e.finish,dec=o.decals!==undefined?o.decals:e.decals;
+ const F=`fill="${col}" ${S()}`;
+ let s=`<g filter="url(#rough)">`;
+ s+=`<ellipse cx="215" cy="273" rx="200" ry="9" fill="#000" opacity=".13"/>`;
+ s+=bar(150,212,48,224,7,PAL.greyD);
+ if(!o.noRear)s+=`<g class="rearW">${wheel(98,232,40,{flat:o.flatRear})}</g>`;
+ s+=bar(333,70,341,232,5,PAL.greyD);
+ s+=wheel(341,232,40);
+ s+=`<path d="M206,207 L214,262" stroke="${INK}" stroke-width="4" stroke-linecap="round"/>`;
+ if(model==='touring')s+=wheel(252,162,30);
+ s+=`<path d="${VP.floor}" ${F}/>`;
+ if(o.cowlSlot)s+=`<g id="cowlUnder">${engineMini()}</g><g id="cowlSlot"></g>`;
+ else if(o.cowlOff)s+=engineMini();
+ else s+=cowlSVG(col,o);
+ s+=`<path d="${VP.leg}" ${F}/>`;
+ if(dec)s+=`<path d="${starPath(318,150,10,.4)}" fill="${PAL.pink}" ${S(1.6)}/>`;
+ s+=`<path d="${VP.fender}" ${F}/>`;
+ s+=`<path d="M300,48 L262,37" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>`+bar(262,37,248,34,6,PAL.brown);
+ s+=`<path d="${VP.head}" ${F}/>`;
+ s+=`<circle cx="352" cy="53" r="11" fill="${o.lightOn?'#fff6c8':PAL.cream}" ${S()}/><circle cx="352" cy="53" r="6" fill="none" stroke="${PAL.gold}" stroke-width="2"/>`;
+ if(model==='touring')s+=`<path d="M298,44 C294,14 312,-6 334,-10 L344,38 Z" fill="#dfeaf2" opacity=".75" ${S(2)}/><path d="M24,124 L18,106 L86,100" fill="none" ${S(3.5)}/>`;
+ if(model==='cafe')s+=`<path d="M318,40 L326,18 L348,36 Z" fill="#dfeaf2" opacity=".8" ${S(2)}/>`;
+ s+=`<path d="${VP.seat}" fill="${PAL.brown}" ${S()}/><path d="M80,114 C110,106 160,105 186,113" fill="none" stroke="#a87a5c" stroke-width="2.5" stroke-linecap="round"/>`;
+ s+=`<rect x="20" y="150" width="11" height="17" rx="3" fill="#d9776a" ${S(2)}/>`;
+ if(fin!=='matte')s+=`<path d="M318,84 C313,118 311,150 314,186" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".5"/><path d="M322,176 C330,172 342,172 352,176" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".5"/>`;
+ if(fin==='pearl')s+=`<path d="${VP.leg+VP.fender+VP.head}" fill="url(#pearl)"/>`;
+ s+='</g>';
+ return s;
+}
+function mascot(mood='happy'){
+ const skin='#f3cfa8',hair='#7a4a2b',hairL='#9a6440';
+ const eyes=mood==='oops'?`<path d="M62,82 L72,88 L62,94" fill="none" ${S(2.4)}/><path d="M98,82 L88,88 L98,94" fill="none" ${S(2.4)}/>`:mood==='wow'?`<ellipse cx="68" cy="88" rx="7.5" ry="9" fill="#fff" ${S(2)}/><ellipse cx="92" cy="88" rx="7.5" ry="9" fill="#fff" ${S(2)}/><circle cx="68" cy="89" r="4" fill="${INK}"/><circle cx="92" cy="89" r="4" fill="${INK}"/>`:`<ellipse cx="68" cy="88" rx="7.5" ry="9" fill="#fff" ${S(2)}/><ellipse cx="92" cy="88" rx="7.5" ry="9" fill="#fff" ${S(2)}/><circle cx="72" cy="88" r="4" fill="${INK}"/><circle cx="96" cy="88" r="4" fill="${INK}"/><path d="M60,79 l-3,-3 M64,78 l-1,-4 M100,79 l3,-3 M96,78 l1,-4" ${S(1.6)}/>`;
+ const mouth=mood==='oops'?`<ellipse cx="80" cy="108" rx="4" ry="5" fill="#b5534e" ${S(1.8)}/>`:mood==='wow'?`<path d="M72,104 Q80,116 88,104 Z" fill="#b5534e" ${S(1.8)}/>`:`<path d="M73,105 Q80,111 87,105" fill="none" ${S(2)}/>`;
+ return `<g filter="url(#rough)">
+ <path d="M30,74 C22,24 138,22 130,76 C140,118 134,160 144,196 C122,206 112,186 108,172 L52,172 C48,188 36,206 16,196 C26,160 20,118 30,74Z" fill="${hair}" ${S()}/>
+ <rect x="70" y="118" width="20" height="26" fill="${skin}" ${S(2)}/>
+ <path d="M54,148 L106,148 L110,222 L50,222Z" fill="${PAL.white}" ${S()}/>
+ <path d="M68,148 Q80,170 92,148" fill="none" stroke="${PAL.gold}" stroke-width="1.6"/><circle cx="80" cy="166" r="3" fill="none" stroke="${PAL.gold}" stroke-width="1.6"/>
+ <path d="M38,150 C46,144 56,146 58,150 L56,226 L36,226 C30,196 30,168 38,150Z" fill="${PAL.navy}" ${S()}/>
+ <path d="M122,150 C114,144 104,146 102,150 L104,226 L124,226 C130,196 130,168 122,150Z" fill="${PAL.navy}" ${S()}/>
+ <path d="M38,154 C22,172 16,198 34,214 L46,206 C36,194 40,178 48,168Z" fill="${PAL.navy}" ${S()}/>
+ <path d="M122,154 C138,172 144,198 126,214 L114,206 C124,194 120,178 112,168Z" fill="${PAL.navy}" ${S()}/>
+ <ellipse cx="44" cy="212" rx="8" ry="7" fill="${skin}" ${S(2)}/><ellipse cx="116" cy="212" rx="8" ry="7" fill="${skin}" ${S(2)}/>
+ <path d="M50,220 L110,220 L120,306 L88,306 L80,244 L74,306 L40,306Z" fill="${PAL.denim}" ${S()}/>
+ <path d="M78,222 L78,234 M58,236 Q66,240 70,232 M100,236 Q94,240 90,232" fill="none" ${S(1.6)}/>
+ <path d="M42,304 L74,304 L76,322 L36,322 C36,314 38,308 42,304Z" fill="${PAL.tan}" ${S()}/><path d="M86,304 L120,304 C124,308 126,314 126,322 L84,322Z" fill="${PAL.tan}" ${S()}/>
+ <g transform="rotate(-25 126 214)">${bar(126,214,126,250,5,PAL.metal)}<path d="M118,250 a9,9 0 1 0 16,0 l-5,-3 l-6,0z" fill="${PAL.metal}" ${S(2)}/></g>
+ <ellipse cx="80" cy="88" rx="34" ry="38" fill="${skin}" ${S()}/>
+ <path d="M44,86 C44,50 78,44 80,54 C82,44 116,50 116,86 C108,64 92,60 80,62 C68,60 52,64 44,86Z" fill="${hair}" ${S()}/>
+ <path d="M46,80 C34,120 40,150 52,176 M114,80 C126,120 120,150 108,176" fill="none" stroke="${hair}" stroke-width="12" stroke-linecap="round"/>
+ <path d="M44,90 C38,124 44,150 54,172 M116,90 C122,124 116,150 106,172" fill="none" stroke="${hairL}" stroke-width="2" stroke-linecap="round"/>
+ <path d="M60,56 C66,50 74,50 78,56 M84,56 C90,50 98,52 102,58" fill="none" stroke="${hairL}" stroke-width="2"/>
+ ${eyes}
+ <ellipse cx="58" cy="102" rx="8" ry="5" fill="${PAL.blush}" opacity=".85"/><ellipse cx="102" cy="102" rx="8" ry="5" fill="${PAL.blush}" opacity=".85"/>
+ <path d="M77,96 q1.5,3 3,0 q1.5,3 3,0" fill="none" ${S(1.6)}/>
+ ${mouth}
+ <circle cx="46" cy="100" r="4.5" fill="none" stroke="${PAL.gold}" stroke-width="2.4"/><circle cx="114" cy="100" r="4.5" fill="none" stroke="${PAL.gold}" stroke-width="2.4"/>
+ </g>`;
+}
+function setMascot(mood){const h=$('#mascotHead');if(h)h.innerHTML=`<svg viewBox="26 38 108 92" width="70" height="60">${mascot(mood)}</svg>`}
+function cow(){
+ return `<g filter="url(#rough)">
+ <rect x="52" y="118" width="13" height="34" fill="${PAL.cream}" ${S()}/><rect x="70" y="118" width="13" height="34" fill="${PAL.cream}" ${S()}/>
+ <rect x="128" y="118" width="13" height="34" fill="${PAL.cream}" ${S()}/><rect x="146" y="118" width="13" height="34" fill="${PAL.cream}" ${S()}/>
+ <path d="M52,146 h13 v8 h-13z M70,146 h13 v8 h-13z M128,146 h13 v8 h-13z M146,146 h13 v8 h-13z" fill="#5a3a2a" ${S(2)}/>
+ <path d="M44,78 C46,64 70,60 110,62 C150,60 168,70 168,96 C168,118 156,128 110,128 C70,128 48,124 44,104Z" fill="${PAL.cream}" ${S()}/>
+ <path d="${starPath(112,84,22,.38)}" fill="${PAL.pink}" ${S(2)} transform="rotate(-10 112 84)"/>
+ <path d="${starPath(150,112,13,.38)}" fill="${PAL.pink}" ${S(1.8)}/>
+ <path d="M112,124 q6,10 14,0" fill="${PAL.pinkL}" ${S(2)}/>
+ <path d="M168,84 q12,6 10,22" fill="none" ${S(2.5)}/>
+ <path d="M18,66 C14,50 28,42 44,46 C56,48 60,62 58,78 C56,90 50,96 40,96 C26,96 20,84 18,66Z" fill="${PAL.cream}" ${S()}/>
+ <ellipse cx="26" cy="86" rx="12" ry="9" fill="${PAL.pinkL}" ${S(2)}/><circle cx="22" cy="86" r="1.6" fill="${INK}"/><circle cx="29" cy="86" r="1.6" fill="${INK}"/>
+ <path d="M30,64 q4,3 8,0" fill="none" ${S(2)}/><path d="M48,52 l10,-6 l-2,10z" fill="${PAL.cream}" ${S(2)}/>
+ <path d="M40,98 q10,8 18,-2 M48,100 l-6,12 M50,100 l4,12" fill="none" stroke="${PAL.pink}" stroke-width="2.4"/>
+ <path d="M30,46 L44,6 L54,42 Z" fill="${PAL.pink}" ${S()}/><path d="M34,34 L50,30 M38,22 L48,20" stroke="#fff" stroke-width="2"/>
+ <path d="${starPath(44,6,7,.45)}" fill="${PAL.gold}" ${S(1.6)}/>
+ </g>`;
+}
+function bunting(w=960,y=0,n=16){let s=`<path d="M0,${y+10} Q${w/2},${y+46} ${w},${y+10}" fill="none" stroke="${INK}" stroke-width="2"/>`;for(let i=1;i<n;i++){const x=i*w/n,yy=y+10+Math.sin(Math.PI*i/n)*34;s+=`<path d="M${x-14},${yy} L${x+14},${yy} L${x},${yy+26}Z" fill="${i%2?PAL.pink:PAL.gold}" ${S(2)} />`}return s}
+function bgSVG(){
+ const g=GARAGES[G.save.eq.garage]||GARAGES.olive;
+ let s=`<rect width="960" height="600" fill="${g.wall}"/><rect width="960" height="600" filter="url(#mottle)" opacity=".5"/>`;
+ s+=`<rect y="478" width="960" height="122" fill="${g.floor}"/><path d="M0,478 L960,478" stroke="${INK}" stroke-width="3"/>`;
+ for(let i=0;i<9;i++)s+=`<path d="M${i*120-40},600 L${i*120+30},478" stroke="${INK}" stroke-width="1.2" opacity=".25"/>`;
+ [[60,90,8,'g'],[880,140,10,'p'],[120,330,6,'p'],[830,380,7,'g'],[460,60,6,'g'],[700,250,5,'p'],[260,200,5,'g']].forEach(([x,y,r,c])=>s+=`<path d="${starPath(x,y,r,.42)}" fill="${c==='g'?PAL.gold:PAL.pinkL}" opacity=".7"/>`);
+ s+=`<g opacity=".9">${bunting(960,-6,18)}</g>`;
+ return s;
+}
+const handSVG=`<g class="pointerHand"><path d="M0,0 L-6,26 C-7,34 0,40 8,40 L22,40 C28,40 32,34 30,26 L28,12 C27,8 21,8 21,12 L21,16 L20,8 C19,4 13,4 13,8 L13,14 L12,6 C11,2 5,2 5,6 L4,-14 C4,-20 -3,-20 -3,-14 Z" fill="#fff" ${S(2.4)} transform="rotate(-20)"/></g>`;
+
+// ---------- TOOLS ----------
+const TOOLS={
+ wrench:{name:'13 mm Wrench',svg:H=>bar(16,46,38,24,7,PAL.metal)+`<path d="M36,9 A13,13 0 1 0 51,24 L42,24 L36,18 Z" fill="${PAL.metal}" ${S(2.4)}/>`+bar(13,49,22,40,9,H)},
+ torque:{name:'Torque Wrench',svg:H=>bar(12,50,40,22,5,PAL.metal)+`<circle cx="43" cy="18" r="9" fill="${PAL.metal}" ${S(2.4)}/><circle cx="43" cy="18" r="3.5" fill="${PAL.greyD}"/><rect x="21" y="30" width="12" height="7" fill="${PAL.gold}" ${S(2)} transform="rotate(-45 27 33)"/>`+bar(9,53,19,43,9,H)},
+ pliers:{name:'Pliers',svg:H=>bar(30,32,16,54,6,H)+bar(30,32,42,54,6,H)+`<path d="M30,32 L24,8 M30,32 L36,8" stroke="${INK}" stroke-width="9" stroke-linecap="round"/><path d="M30,32 L24,8 M30,32 L36,8" stroke="${PAL.metal}" stroke-width="4.5" stroke-linecap="round"/><circle cx="30" cy="31" r="4" fill="${PAL.gold}" ${S(2)}/>`},
+ hammer:{name:'Claw Hammer',svg:H=>bar(30,24,30,54,6,H)+`<path d="M14,12 L42,10 L48,18 L42,24 L14,22 C10,20 10,14 14,12Z" fill="${PAL.greyD}" ${S(2.4)}/>`},
+ sledge:{name:'Sledgehammer',svg:H=>bar(30,26,30,56,6,H)+`<rect x="10" y="8" width="40" height="20" rx="3" fill="${PAL.greyD}" ${S(2.4)}/>`},
+ screwdriver:{name:'Flat Screwdriver',svg:H=>bar(30,32,30,9,3.5,PAL.metal)+`<rect x="23" y="30" width="14" height="24" rx="6" fill="${H}" ${S(2.4)}/><path d="M26,8 L34,8" stroke="${INK}" stroke-width="3"/>`},
+ phillips:{name:'Phillips Screwdriver',svg:H=>bar(30,32,30,10,3.5,PAL.metal)+`<rect x="23" y="30" width="14" height="24" rx="6" fill="${H}" ${S(2.4)}/><path d="M25,8 L35,8 M30,3 L30,13" stroke="${INK}" stroke-width="2.4"/>`},
+ sponge:{name:'Soapy Sponge',svg:()=>`<rect x="10" y="22" width="40" height="26" rx="8" fill="${PAL.butter}" ${S(2.4)}/><circle cx="20" cy="32" r="2.5" fill="#c9a650"/><circle cx="34" cy="38" r="3" fill="#c9a650"/><circle cx="42" cy="29" r="2" fill="#c9a650"/><circle cx="18" cy="16" r="6" fill="#fff" ${S(1.6)}/><circle cx="31" cy="12" r="4" fill="#fff" ${S(1.6)}/><circle cx="42" cy="16" r="5" fill="#fff" ${S(1.6)}/>`},
+ sandpaper:{name:'Sandpaper',svg:()=>`<rect x="12" y="14" width="36" height="32" rx="3" fill="#d6b88a" ${S(2.4)} transform="rotate(-10 30 30)"/>`+Array.from({length:14},(_,i)=>`<circle cx="${16+(i*7)%30}" cy="${18+Math.floor(i/5)*8+(i%2)*3}" r="1.2" fill="#8a6a44"/>`).join('')},
+ glue:{name:'Rubber Cement',svg:H=>`<path d="M16,46 L16,22 C16,18 20,16 24,16 L36,16 C40,16 44,18 44,22 L44,46 Z" fill="${PAL.white}" ${S(2.4)}/><rect x="24" y="6" width="12" height="11" fill="${H}" ${S(2)}/><rect x="20" y="26" width="20" height="12" fill="${PAL.gold}" ${S(1.6)}/>`},
+ pump:{name:'Floor Pump',svg:H=>`<rect x="24" y="16" width="12" height="34" rx="3" fill="${PAL.metal}" ${S(2.4)}/><path d="M14,52 L46,52" ${S(4)}/>`+bar(30,16,30,8,2,PAL.metal)+bar(18,8,42,8,4,H)+`<path d="M36,44 C50,44 52,28 46,22" fill="none" ${S(2.6)}/>`},
+ blower:{name:'Air Blower',svg:H=>`<path d="M12,22 L40,22 C46,22 48,26 48,30 C48,34 46,38 40,38 L26,38 L24,52 L14,52 L16,38 C12,36 10,32 12,22Z" fill="${H}" ${S(2.4)}/>`+bar(48,30,56,30,3,PAL.metal)},
+ carbspray:{name:'Carb Cleaner',svg:H=>`<rect x="20" y="18" width="20" height="36" rx="5" fill="${PAL.red}" ${S(2.4)}/><rect x="24" y="10" width="12" height="9" fill="${PAL.white}" ${S(2)}/><path d="M36,13 L48,10" ${S(2.4)}/><rect x="22" y="28" width="16" height="10" fill="${PAL.butter}" ${S(1.6)}/>`},
+ plugsocket:{name:'Spark Plug Socket',svg:H=>bar(10,14,50,14,4,H)+bar(30,14,30,28,3,PAL.metal)+`<polygon points="${hexPts(30,40,12)}" fill="${PAL.metal}" ${S(2.4)}/><circle cx="30" cy="40" r="5" fill="${PAL.greyD}"/>`},
+ flashlight:{name:'Flashlight',svg:H=>`<path d="M10,26 L32,26 L44,18 L44,42 L32,34 L10,34Z" fill="${H}" ${S(2.4)}/><path d="M46,22 L56,16 M47,30 L58,30 M46,38 L56,44" stroke="${PAL.gold}" stroke-width="3" stroke-linecap="round"/>`},
+ hand:{name:'Gloved Hands',svg:()=>`<path d="M18,50 L16,26 C16,22 21,22 22,26 L23,18 C23,14 28,14 29,18 L29,15 C29,11 35,11 35,15 L35,19 C36,15 41,15 41,19 L41,36 L45,30 C47,27 52,29 50,33 L42,48 C40,52 36,54 30,54 L22,54 C20,54 18,52 18,50Z" fill="${PAL.butter}" ${S(2.4)}/>`},
+ wirebrush:{name:'Wire Brush',svg:H=>`<rect x="8" y="28" width="44" height="10" rx="4" fill="${H}" ${S(2.4)}/>`+Array.from({length:8},(_,i)=>`<line x1="${12+i*5}" y1="38" x2="${12+i*5}" y2="48" stroke="${PAL.greyD}" stroke-width="2"/>`).join('')},
+ multimeter:{name:'Multimeter',svg:()=>`<rect x="14" y="8" width="32" height="46" rx="6" fill="${PAL.butter}" ${S(2.4)}/><rect x="19" y="13" width="22" height="11" fill="#cfd8c0" ${S(1.6)}/><circle cx="30" cy="38" r="8" fill="${PAL.greyD}" ${S(1.8)}/><path d="M30,38 L30,31" stroke="#fff" stroke-width="2"/>`},
+ stripper:{name:'Wire Stripper',svg:H=>bar(28,32,14,54,5,H)+bar(32,32,46,54,5,H)+`<path d="M24,30 L22,8 L30,8 L30,30 M36,30 L38,8 L30,8" fill="${PAL.metal}" ${S(2)}/><circle cx="30" cy="16" r="2.5" fill="${INK}"/>`},
+ crimper:{name:'Crimper',svg:H=>bar(28,30,14,54,6,H)+bar(32,30,46,54,6,H)+`<path d="M22,30 C18,18 22,8 30,8 C38,8 42,18 38,30Z" fill="${PAL.metal}" ${S(2.2)}/><circle cx="30" cy="20" r="3" fill="${PAL.red}"/>`},
+ heatgun:{name:'Heat Gun',svg:H=>`<path d="M8,20 L40,20 L40,36 L22,36 L20,54 L10,54 L12,36 L8,36Z" fill="${H}" ${S(2.4)}/><rect x="40" y="22" width="12" height="12" fill="${PAL.metal}" ${S(2)}/><path d="M54,24 q4,4 0,8" fill="none" stroke="${PAL.red}" stroke-width="2.4"/>`},
+ dolly:{name:'Body Hammer & Dolly',svg:H=>bar(22,22,14,54,4,H)+`<path d="M8,16 L34,12 L36,20 L10,26 Z" fill="${PAL.metal}" ${S(2.2)}/><path d="M36,38 C36,30 54,30 54,40 C54,50 36,52 36,44Z" fill="${PAL.greyD}" ${S(2.2)}/>`},
+ spreader:{name:'Filler Spreader',svg:()=>`<path d="M12,20 L48,16 L50,40 L14,46 Z" fill="${PAL.denim}" opacity=".95" ${S(2.4)}/><path d="M18,26 L44,23" stroke="#fff" stroke-width="2"/>`},
+ sander:{name:'Sanding Block',svg:H=>`<path d="M10,30 C10,18 50,18 50,30 L50,40 L10,40Z" fill="${H}" ${S(2.4)}/><rect x="8" y="40" width="44" height="8" fill="#d6b88a" ${S(2)}/>`},
+ p80:{name:'P80 Coarse Paper',svg:()=>`<rect x="12" y="12" width="36" height="36" rx="3" fill="#a9895c" ${S(2.4)}/><text x="30" y="36" text-anchor="middle" font-family="Gaegu" font-weight="700" font-size="16" fill="${INK}">80</text>`},
+ p400:{name:'P400 Fine Paper',svg:()=>`<rect x="12" y="12" width="36" height="36" rx="3" fill="#e6d3b0" ${S(2.4)}/><text x="30" y="36" text-anchor="middle" font-family="Gaegu" font-weight="700" font-size="15" fill="${INK}">400</text>`},
+ spraygun:{name:'Spray Gun',svg:H=>`<path d="M20,6 L32,6 L34,20 L18,20Z" fill="${PAL.metal}" ${S(2.2)}/><path d="M10,22 L44,22 L44,34 L28,34 L26,54 L16,54 L18,34 L10,34Z" fill="${H}" ${S(2.4)}/>`+bar(44,28,54,28,3,PAL.metal)},
+ polisher:{name:'Orbital Polisher',svg:H=>`<rect x="14" y="10" width="32" height="18" rx="8" fill="${H}" ${S(2.4)}/><rect x="26" y="28" width="8" height="8" fill="${PAL.greyD}" ${S(2)}/><ellipse cx="30" cy="44" rx="22" ry="8" fill="${PAL.white}" ${S(2.4)}/>`},
+};
+function toolIcon(id,size=60){return `<svg viewBox="0 0 60 60" width="${size}" height="${size}"><g filter="url(#rough)">${TOOLS[id].svg(handle())}</g></svg>`}
+// ================= RUN FRAMEWORK =================
+let RUN=null;
+function makeC(run){
+ const tok=run.tok,alive=()=>RUN&&RUN.tok===tok;
+ const layer=()=>$('#layer'),overG=()=>$('#overG');
+ const C={run,alive,
+  wait(ms){return new Promise(r=>setTimeout(()=>{if(alive())r()},ms))},
+  frame(fn){let last=performance.now();const loop=t=>{if(!alive())return;const dt=Math.min(.05,(t-last)/1000);last=t;if(run.paused){requestAnimationFrame(loop);return}if(fn(dt)!==false)requestAnimationFrame(loop)};requestAnimationFrame(loop)},
+  clear(){layer().innerHTML='';overG().innerHTML='';const old=$('#cv'),n=old.cloneNode(false);n.style.display='none';old.replaceWith(n);
+   C.tray([]);C.actions([]);C.cursor(null);$('#meters').innerHTML='';Snd.stopLoop();run.keys=[]},
+  add(html,parent){const g=document.createElementNS(NS,'g');g.innerHTML=html;(parent||layer()).appendChild(g);return g},
+  over(html){return C.add(html,overG())},
+  canvas(){const c=$('#cv');c.style.display='block';return c},
+  hint(html,mood){$('#hintTxt').innerHTML=html;if(mood)setMascot(mood)},
+  toast(t,kind='good'){const d=document.createElement('div');d.className='toast '+kind;d.textContent=t;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),2300)},
+  mistake(msg,tool){if(!alive())return;run.mist++;if(tool)run.toolErr++;Snd.buzz();C.toast('✗ '+msg,'bad');const st=$('#stage');st.classList.remove('shake');void st.offsetWidth;st.classList.add('shake');updateHUD();setMascot('oops');clearTimeout(run.moodT);run.moodT=setTimeout(()=>setMascot('happy'),1500)},
+  good(msg){Snd.ding();C.toast(msg,'good');setMascot('wow');clearTimeout(run.moodT);run.moodT=setTimeout(()=>setMascot('happy'),1200)},
+  acc(v){run.acc.push(clamp(v,0,1))},
+  cursor(id){const g=$('#cursorG');g.innerHTML=id?`<g transform="translate(-26,-30) scale(1.05)" filter="url(#rough)">${TOOLS[id].svg(handle())}</g>`:'';run.cursor=id},
+  tray(items){const t=$('#tray');t.innerHTML='';items.forEach(it=>{const b=document.createElement('button');b.className='tool';b.innerHTML=toolIcon(it.id)+TOOLS[it.id].name;b.onclick=()=>{Snd.init();it.fn(b)};if(it.hint)b.classList.add('hintme');t.appendChild(b)})},
+  actions(list){const a=$('#actions');a.innerHTML='';list.forEach(o=>C.btn(o.label,o.fn,o.cls))},
+  btn(label,fn,cls=''){const b=document.createElement('button');b.className='btn '+cls;b.innerHTML=label;b.onclick=()=>{Snd.init();Snd.click();fn(b)};$('#actions').appendChild(b);return b},
+  hold(label,down,up,space){const b=document.createElement('button');b.className='btn hold gold';b.innerHTML=label;let on=false;
+   const d=e=>{if(e)e.preventDefault();if(on)return;on=true;Snd.init();b.classList.add('on');down()};const u=()=>{if(!on)return;on=false;b.classList.remove('on');up&&up()};
+   b.addEventListener('pointerdown',d);b.addEventListener('pointerup',u);b.addEventListener('pointerleave',u);b.addEventListener('pointercancel',u);
+   if(space)C.key((e,type)=>{if(e.code==='Space'){e.preventDefault();type==='down'?(!e.repeat&&d()):u()}});
+   $('#actions').appendChild(b);return b},
+  key(fn){run.keys.push(fn)},
+  pickTool(correct,opts,prompt){return new Promise(res=>{let done=false;C.hint(prompt||'Pick the right tool for the job.');
+   const ids=shuffle([...new Set([correct,...opts])]);
+   C.tray(ids.map(id=>({id,hint:run.tut&&id===correct,fn:b=>{if(done||!alive())return;if(id===correct){done=true;Snd.click();$$('.tool').forEach(x=>x.classList.remove('hintme'));b.classList.add('sel');run.tool=id;res(id)}else{C.mistake(`${TOOLS[id].name} isn't right here.`,true);b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),400)}}})))})},
+  choose(opts,prompt){return new Promise(res=>{if(prompt)C.hint(prompt);C.actions(opts.map(o=>({label:o.label,cls:o.cls||'cream',fn:()=>{C.actions([]);res(o.value)}})))})},
+  drag(el,h){dragOn(el,h)},
+  tap(el,fn){el.style.cursor='pointer';el.addEventListener('pointerdown',e=>{if(!alive()||run.paused)return;e.preventDefault();e.stopPropagation();Snd.init();fn(pt(e),e)})},
+  tapOnce(el){return new Promise(res=>{let d=false;C.tap(el,p=>{if(!d){d=true;res(p)}})})},
+  point(x,y){if(run.tut)return C.over(`<g transform="translate(${x},${y})">${handSVG}</g>`);return null},
+  unpoint(g){if(g)g.remove()},
+  meter(id,label,mark){const m=document.createElement('div');m.className='meter';m.id='m_'+id;m.innerHTML=`<div style="display:flex;justify-content:space-between"><span>${label}</span><b class="v">0%</b></div><div class="bar"><i></i>${mark?`<b style="left:${mark*100}%"></b>`:''}</div>`;$('#meters').appendChild(m)},
+  setMeter(id,f,txt,warn){const m=$('#m_'+id);if(!m)return;m.querySelector('i').style.width=clamp(f,0,1)*100+'%';m.querySelector('.v').textContent=txt!==undefined?txt:Math.round(f*100)+'%';m.classList.toggle('warn',!!warn)},
+  panel(x,y,w,h){return C.add(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="22" fill="${PAL.cream}" ${S(3)} filter="url(#rough)"/><rect x="${x+8}" y="${y+8}" width="${w-16}" height="${h-16}" rx="16" fill="none" stroke="${PAL.pink}" stroke-width="2" stroke-dasharray="6 6"/>`)},
+  fx(html,ms=1400){const g=C.over(html);setTimeout(()=>g.remove(),ms);return g},
+  puff(x,y,col='#e9e3d6'){C.fx(`<circle cx="${x}" cy="${y}" r="10" fill="${col}" ${S(1.5)} class="puff"/>`)},
+  sparks(x,y){C.fx(`<g>${[0,1,2].map(i=>`<path d="${starPath(x+rnd(-14,14),y+rnd(-14,14),rnd(8,14),.3,4)}" fill="${PAL.gold}" class="spark"/>`).join('')}</g>`,600)},
+  confetti(x,y){C.fx(`<g>${Array.from({length:10},()=>`<path d="${starPath(x+rnd(-60,60),y+rnd(-40,40),rnd(6,12),.42)}" fill="${pick([PAL.gold,PAL.pink,PAL.pinkL])}" class="spark"/>`).join('')}</g>`,700)}
+ };
+ return C;
+}
+document.addEventListener('keydown',e=>{if(RUN&&!RUN.paused)RUN.keys.forEach(f=>f(e,'down'))});
+document.addEventListener('keyup',e=>{if(RUN&&!RUN.paused)RUN.keys.forEach(f=>f(e,'up'))});
+document.addEventListener('pointermove',e=>{if(!RUN||!RUN.cursor)return;const p=pt(e);$('#cursorG').setAttribute('transform',`translate(${p.x},${p.y})`)},{passive:true});
+
+// circular "unscrew" gesture: dir -1 = anticlockwise (loosen), +1 = clockwise (tighten)
+function spinGesture(C,el,cx,cy,dir,turns,onAngle){return new Promise(res=>{let last=null,total=0,warned=false,done=false;
+ C.drag(el,{down(p){if(done)return false;last=Math.atan2(p.y-cy,p.x-cx)},move(p){if(done||last===null)return;const a=Math.atan2(p.y-cy,p.x-cx);let d=a-last;if(d>Math.PI)d-=2*Math.PI;if(d<-Math.PI)d+=2*Math.PI;last=a;
+  if(Math.sign(d)!==dir&&Math.abs(d)>.02){total-=Math.abs(d)*.3;if(total<-Math.PI&&!warned){warned=true;C.mistake(dir<0?'Lefty-loosey! Turn anticlockwise.':'Righty-tighty! Turn clockwise.')}}else total+=Math.abs(d);
+  total=Math.max(total,-Math.PI*1.2);onAngle(total*dir);if(Math.random()<.12)Snd.squeak();
+  if(total>=turns*Math.PI*2){done=true;res(warned)}},up(){last=null}})})}
+
+// ================= LEVEL 1 — FLAT TIRE =================
+function tyreClose(cx,cy,r,o={}){
+ let s=`<g filter="url(#rough)">`;
+ if(o.flat)s+=`<path d="M${cx-r},${cy} A${r},${r} 0 0 1 ${cx+r},${cy} L${cx+r*1.07},${cy+r*.8} Q${cx+r*.95},${cy+r} ${cx+r*.62},${cy+r} L${cx-r*.62},${cy+r} Q${cx-r*.95},${cy+r} ${cx-r*1.07},${cy+r*.8} Z" fill="${PAL.rubber}" ${S(3)}/>`;
+ else s+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${PAL.rubber}" ${S(3)}/>`;
+ for(let i=0;i<44;i++){const a=i*Math.PI*2/44;if(o.flat&&Math.sin(a)>.7)continue;s+=`<line x1="${(cx+Math.cos(a)*(r-7)).toFixed(1)}" y1="${(cy+Math.sin(a)*(r-7)).toFixed(1)}" x2="${(cx+Math.cos(a)*(r-22)).toFixed(1)}" y2="${(cy+Math.sin(a)*(r-22)).toFixed(1)}" stroke="#211915" stroke-width="5" stroke-linecap="round"/>`}
+ s+=`<circle cx="${cx}" cy="${cy}" r="${r*.78}" fill="none" stroke="#6a5a50" stroke-width="2" stroke-dasharray="7 10"/>`;
+ s+=`<circle cx="${cx}" cy="${cy}" r="${r*.6}" fill="${PAL.cream}" ${S(3)}/><circle cx="${cx}" cy="${cy}" r="${r*.5}" fill="none" stroke="${PAL.tan}" stroke-width="2.5"/><circle cx="${cx}" cy="${cy}" r="${r*.18}" fill="${PAL.metal}" ${S(2.5)}/><circle cx="${cx}" cy="${cy}" r="${r*.07}" fill="${PAL.greyD}"/>`;
+ s+=`<path d="${starPath(cx-r*.38,cy+r*.24,10,.42)}" fill="${PAL.pink}" ${S(1.5)}/>`;
+ return s+'</g>';
+}
+const nutP=(cx,cy,R,i)=>{const a=(-90+72*i)*Math.PI/180;return{x:cx+Math.cos(a)*R,y:cy+Math.sin(a)*R}};
+const nutSVG=(x,y,r=15,loose)=>`<g class="fb"><polygon points="${hexPts(x,y,r)}" fill="${loose?'#e6e1d6':PAL.metal}" ${S(2.5)}/><circle cx="${x}" cy="${y}" r="${r*.42}" fill="${PAL.greyD}" ${S(1.5)}/></g>`;
+
+async function l1inspect(C,R){
+ C.clear();const cx=480,cy=270,r=180;
+ C.add(tyreClose(cx,cy,r,{flat:true}));
+ const a=R.punct.ang*Math.PI/180,P={x:cx+Math.cos(a)*(r-14),y:cy+Math.sin(a)*(r-14)};R.P=P;
+ C.add(R.punct.type==='nail'?`<circle cx="${P.x}" cy="${P.y}" r="3.5" fill="#9a9184"/>`:`<path d="M${P.x-10},${P.y-3} L${P.x+10},${P.y+3}" stroke="#16100d" stroke-width="2.5"/>`);
+ C.add(`<text x="${cx}" y="${cy+r+42}" text-anchor="middle" class="lblB" fill="${PAL.cream}">Rear tyre — totally flat</text>`);
+ await C.pickTool('sponge',['hammer','wrench','glue'],'Something hissed! Grab a tool to spread <b>soapy water</b> over the tyre.');
+ C.hint('Scrub the sponge around the <b>tread</b>. Watch for bubbles!');C.cursor('sponge');
+ const hit=C.add(`<circle cx="${cx}" cy="${cy}" r="${r+30}" fill="transparent"/>`);
+ const ptr=C.point(cx+r-20,cy-60);
+ let revealed=0,tries=0,moved=0,lastB=0;
+ await new Promise(res=>{let done=false;
+  C.drag(hit,{down(){moved=0;C.unpoint(ptr)},move(p){if(done)return;moved++;const d=Math.hypot(p.x-cx,p.y-cy);
+    if(d>r-50&&d<r+12){if(Math.random()<.35)C.fx(`<circle cx="${p.x+rnd(-14,14)}" cy="${p.y+rnd(-14,14)}" r="${rnd(4,10)}" fill="#fff" opacity=".85" ${S(1)} class="foam"/>`,1200);
+     if(dist(p,P)<46&&performance.now()-lastB>120){lastB=performance.now();revealed++;C.fx(`<circle cx="${P.x+rnd(-6,6)}" cy="${P.y+rnd(-6,6)}" r="${rnd(5,11)}" fill="rgba(255,255,255,.35)" stroke="#fff" stroke-width="2" class="bubble"/>`,1400);if(revealed%3===0)Snd.pop();if(revealed===6)C.hint('Bubbles! <b>Tap exactly where they come from.</b>','wow')}}},
+   up(p){if(done||moved>5)return;if(revealed<6){C.toast('Scrub more to find the bubbles first','meh');return}tries++;
+    if(dist(p,P)<34){done=true;C.acc(tries===1?1:tries===2?.7:.4);res()}else C.mistake('No leak there — follow the bubbles.')}});
+ });
+ C.cursor(null);
+ C.add(`<circle cx="${P.x}" cy="${P.y}" r="26" fill="none" stroke="${PAL.gold}" stroke-width="4" stroke-dasharray="8 6" class="bounceIn"/>`);
+ C.good(R.punct.type==='nail'?'Found it — a little nail!':'Found it — a long tear!');
+ C.add(`<g class="bounceIn"><rect x="40" y="40" width="210" height="120" rx="16" fill="${PAL.cream}" ${S(2.5)}/><text x="145" y="68" text-anchor="middle" class="lblB">Close-up</text>${R.punct.type==='nail'?`<rect x="70" y="100" width="150" height="34" rx="6" fill="${PAL.rubber}"/><circle cx="145" cy="117" r="6" fill="#9a9184" ${S(2)}/><path d="M145,117 l26,-30" ${S(3)}/>`:`<rect x="70" y="100" width="150" height="34" rx="6" fill="${PAL.rubber}"/><path d="M90,114 L120,120 L140,112 L170,121 L200,116" fill="none" stroke="#000" stroke-width="5"/><path d="M90,114 L120,120 L140,112 L170,121 L200,116" fill="none" stroke="#7a6a60" stroke-width="1.5"/>`}</g>`);
+ await C.wait(1300);
+}
+async function l1remove(C,R){
+ C.clear();const cx=480,cy=270,r=180;
+ C.add(`<circle cx="${cx}" cy="${cy}" r="34" fill="${PAL.greyD}" ${S(3)}/><circle cx="${cx}" cy="${cy}" r="12" fill="${INK}"/>`);
+ const wg=C.add(tyreClose(cx,cy,r,{flat:true})+`<circle cx="${R.P.x}" cy="${R.P.y}" r="22" fill="none" stroke="${PAL.gold}" stroke-width="4" stroke-dasharray="8 6"/>`);
+ const nuts=[0,1,2,3,4].map(i=>{const p=nutP(cx,cy,r*.34,i);return C.add(nutSVG(p.x,p.y),wg)});
+ await C.pickTool('wrench',['pliers','hammer','screwdriver'],'Which tool fits the <b>13 mm</b> wheel nuts?');
+ C.hint('Tap each nut to loosen it — <i>lefty-loosey!</i>');C.cursor('wrench');
+ let ptr=C.point(nutP(cx,cy,r*.34,0).x+6,nutP(cx,cy,r*.34,0).y+6);
+ await new Promise(res=>{let left=5;nuts.forEach(n=>C.tap(n,()=>{if(n.dataset.off)return;n.dataset.off=1;C.unpoint(ptr);Snd.ratchet();n.firstChild.classList.add('unscrew');setTimeout(()=>n.remove(),600);if(--left===0)setTimeout(res,650)}))});
+ C.cursor(null);C.hint('Now <b>drag the wheel off</b> the hub →');ptr=C.point(cx+80,cy+30);
+ await new Promise(res=>{let sx=0,done=false;C.drag(wg,{down(p){if(done)return false;sx=p.x;wg.style.transition='none';C.unpoint(ptr)},move(p){const dx=clamp(p.x-sx,0,520);wg.style.transform=`translateX(${dx}px)`},
+  up(p){const dx=p.x-sx;wg.style.transition='transform .45s ease';if(dx>200){done=true;Snd.thud();wg.style.transform='translateX(720px)';setTimeout(res,450)}else wg.style.transform='translateX(0)'}})});
+}
+async function l1fix(C,R){
+ C.clear();const cx=440,cy=270,rr=150;const a=R.punct.ang*Math.PI/180,P={x:cx+Math.cos(a)*rr,y:cy+Math.sin(a)*rr};
+ const tubeG=C.add(`<g filter="url(#rough)"><circle cx="${cx}" cy="${cy}" r="${rr}" fill="none" stroke="${INK}" stroke-width="42"/><circle cx="${cx}" cy="${cy}" r="${rr}" fill="none" stroke="#5b4a45" stroke-width="36"/><circle cx="${cx}" cy="${cy}" r="${rr-8}" fill="none" stroke="#7a675f" stroke-width="5" opacity=".7"/><rect x="${cx-5}" y="${cy+rr+14}" width="10" height="26" fill="${PAL.metal}" ${S(2)}/>
+ ${R.punct.type==='nail'?`<circle cx="${P.x}" cy="${P.y}" r="4" fill="#120c0a" stroke="#fff" stroke-width="1"/>`:`<path d="${arcD(cx,cy,rr,R.punct.ang-9,R.punct.ang+9)}" fill="none" stroke="#120c0a" stroke-width="7"/><path d="${arcD(cx,cy,rr,R.punct.ang-9,R.punct.ang+9)}" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="3 3"/>`}</g>`);
+ C.add(`<circle cx="${P.x}" cy="${P.y}" r="24" fill="none" stroke="${PAL.gold}" stroke-width="3.5" stroke-dasharray="8 6"/>`);
+ C.add(`<text x="${cx}" y="${cy+6}" text-anchor="middle" class="lblB" fill="${PAL.cream}">inner tube</text>`);
+ let choice=await C.choose([{label:'Patch kit',value:'patch'},{label:'New inner tube',value:'tube'}],'Tube’s out. Is this a <b>small hole</b> (patch it) or a <b>tear</b> (new tube)?');
+ if(R.punct.type==='tear'&&choice==='patch'){C.mistake('That tear is too long to patch!');choice='tube'}
+ else if(R.punct.type==='nail'&&choice==='tube'){C.toast('A patch would have done — a bit wasteful','meh');C.acc(.65)}
+ else C.acc(1);
+ if(choice==='patch'){
+  await C.pickTool('sandpaper',['glue','hammer','sponge'],'First rough up the rubber around the hole.');
+  C.hint('Scrub the sandpaper back and forth over the hole.');C.cursor('sandpaper');
+  const rough=C.add(`<circle cx="${P.x}" cy="${P.y}" r="26" fill="#8a7a70" opacity="0"/>`);rough.firstChild.setAttribute('opacity',0);
+  const hit=C.add(`<circle cx="${P.x}" cy="${P.y}" r="70" fill="transparent"/>`);
+  await new Promise(res=>{let len=0,last=null,done=false;C.drag(hit,{down(p){last=p},move(p){if(done)return;if(dist(p,P)<55){len+=dist(p,last);rough.firstChild.setAttribute('opacity',Math.min(.8,len/350));if(Math.random()<.2)Snd.noise(.05,.04,2500)}last=p;if(len>350){done=true;res()}}})});
+  hit.remove();
+  await C.pickTool('glue',['sandpaper','wrench','pliers'],'Nice and rough. Now the <b>rubber cement</b>.');
+  C.cursor('glue');C.hint('Tap the hole to spread the glue.');
+  await new Promise(res=>{const h=C.add(`<circle cx="${P.x}" cy="${P.y}" r="80" fill="transparent"/>`);C.tap(h,p=>{if(dist(p,P)<34){h.remove();res()}else C.mistake('Glue the hole, not the rest of the tube!')})});
+  C.cursor(null);const glue=C.add(`<circle cx="${P.x}" cy="${P.y}" r="22" fill="#e8e2b8" opacity=".85" ${S(1.5)} class="bounceIn"/>`);Snd.pop();
+  const c=2*Math.PI*30,ring=C.add(`<circle cx="${P.x}" cy="${P.y}" r="30" fill="none" stroke="${PAL.gold}" stroke-width="5" stroke-dasharray="0 ${c}" transform="rotate(-90 ${P.x} ${P.y})"/>`);
+  const patch=C.add(`<g filter="url(#rough)"><rect x="-24" y="-24" width="48" height="48" rx="12" fill="#e9967e" ${S(2.5)}/><rect x="-14" y="-14" width="28" height="28" rx="6" fill="#d77c64"/></g>`);
+  let px=820,py=380;patch.setAttribute('transform',`translate(${px},${py})`);
+  C.add(`<text x="820" y="440" text-anchor="middle" class="lbl" fill="${PAL.cream}">patch</text>`);
+  C.hint('Wait for the glue to go <b>tacky</b> (the ring fills), then press the patch onto the hole.');
+  let tacky=false,t0=performance.now();
+  C.frame(()=>{const f=Math.min(1,(performance.now()-t0)/2600);ring.firstChild.setAttribute('stroke-dasharray',`${f*c} ${c}`);if(f>=1){tacky=true;glue.firstChild.setAttribute('fill','#c9c29a');ring.remove();return false}});
+  await new Promise(res=>{let done=false;C.drag(patch,{down(){if(done)return false},move(p){patch.setAttribute('transform',`translate(${p.x},${p.y})`)},up(p){
+   const d=dist(p,P);if(d<50){if(!tacky){C.mistake('Too soon — the glue was still wet!');patch.setAttribute('transform',`translate(${px},${py})`);return}
+    done=true;patch.setAttribute('transform',`translate(${P.x},${P.y})`);Snd.thud();C.acc(1-d/60);C.sparks(P.x,P.y);res()}else patch.setAttribute('transform',`translate(${px},${py})`)}})});
+ }else{
+  C.hint('Drag the <b>old tube</b> away.');
+  await new Promise(res=>{let s=null,done=false;C.drag(tubeG,{down(p){if(done)return false;s=p},move(p){tubeG.setAttribute('transform',`translate(${p.x-s.x},${p.y-s.y})`)},up(p){if(dist(p,s)>140){done=true;tubeG.style.transition='opacity .4s';tubeG.style.opacity=0;setTimeout(res,400)}else tubeG.setAttribute('transform','')}})});
+  $$('#layer circle[stroke-dasharray="8 6"]').forEach(e=>e.remove());
+  C.add(`<circle cx="${cx}" cy="${cy}" r="${rr}" fill="none" stroke="${PAL.cream}" stroke-width="3" stroke-dasharray="10 8"/>`);
+  const nt=C.add(`<g filter="url(#rough)"><circle cx="0" cy="0" r="${rr}" fill="none" stroke="${INK}" stroke-width="42"/><circle cx="0" cy="0" r="${rr}" fill="none" stroke="#6b5751" stroke-width="36"/><circle cx="0" cy="0" r="${rr-8}" fill="none" stroke="#9a857c" stroke-width="5" opacity=".7"/></g>`);
+  const sx=780,sy=280;nt.setAttribute('transform',`translate(${sx},${sy}) scale(.45)`);
+  C.hint('Drag the <b>new tube</b> into the outline.');
+  await new Promise(res=>{let done=false;C.drag(nt,{down(){if(done)return false},move(p){nt.setAttribute('transform',`translate(${p.x},${p.y}) scale(${clamp(1-Math.abs(p.x-cx)/700,.45,1)})`)},up(p){const d=dist(p,{x:cx,y:cy});
+   if(d<60){done=true;nt.setAttribute('transform',`translate(${cx},${cy})`);Snd.thud();C.acc(1-d/90);res()}else nt.setAttribute('transform',`translate(${sx},${sy}) scale(.45)`)}})});
+ }
+ C.good('Tube sorted!');await C.wait(700);
+}
+async function l1inflate(C,R){
+ C.clear();const gx=560,gy=260,gr=150,lo=2.0,hi=2.3,tgt=2.15;
+ const ang=p=>-225+clamp(p,0,4)/4*270;
+ let g=`<g filter="url(#rough)"><circle cx="${gx}" cy="${gy}" r="${gr+14}" fill="${PAL.gold}" ${S(3)}/><circle cx="${gx}" cy="${gy}" r="${gr}" fill="${PAL.white}" ${S(3)}/>`;
+ g+=`<path d="${arcD(gx,gy,gr-22,ang(lo),ang(hi))}" fill="none" stroke="#8fb06a" stroke-width="22"/><path d="${arcD(gx,gy,gr-22,ang(3.2),ang(4))}" fill="none" stroke="#e39a8a" stroke-width="22"/>`;
+ for(let v=0;v<=4.001;v+=.25){const a=ang(v)*Math.PI/180,big=Math.abs(v-Math.round(v))<.01;g+=`<line x1="${gx+Math.cos(a)*(gr-8)}" y1="${gy+Math.sin(a)*(gr-8)}" x2="${gx+Math.cos(a)*(gr-(big?34:22))}" y2="${gy+Math.sin(a)*(gr-(big?34:22))}" stroke="${INK}" stroke-width="${big?3:1.6}"/>`;if(big)g+=`<text x="${gx+Math.cos(a)*(gr-52)}" y="${gy+Math.sin(a)*(gr-52)+7}" text-anchor="middle" class="lblB">${v}</text>`}
+ g+=`<text x="${gx}" y="${gy+62}" text-anchor="middle" class="lbl">bar</text></g>`;
+ C.add(g);
+ const needle=C.add(`<g><path d="M${gx-6},${gy} L${gx},${gy-gr+30} L${gx+6},${gy} Z" fill="${PAL.red}" ${S(2)}/><circle cx="${gx}" cy="${gy}" r="12" fill="${PAL.pink}" ${S(2.5)}/></g>`);
+ const read=C.add(`<text x="${gx}" y="${gy+105}" text-anchor="middle" class="lblB" font-size="34">0.00</text>`).firstChild;
+ C.add(`<text x="${gx}" y="${gy-gr-28}" text-anchor="middle" class="lblB" fill="${PAL.cream}">Target: ${lo.toFixed(1)}–${hi.toFixed(1)} bar</text>`);
+ const pump=C.add(`<g filter="url(#rough)"><rect x="160" y="200" width="44" height="220" rx="8" fill="${PAL.pink}" ${S(3)}/><path d="M120,430 L244,430" ${S(8)}/><path d="M204,400 C270,410 300,380 ${gx-gr},${gy+40}" fill="none" ${S(5)}/></g>`);
+ const handleG=C.add(`<g>${bar(182,200,182,140,5,PAL.metal)}${bar(140,140,224,140,10,handle())}</g>`);
+ await C.pickTool('pump',['blower','hammer','glue'],'Time to pump it up. Pick the right tool.');
+ C.hint(`Hold <b>PUMP</b> (or Space). Stop in the <b style="color:#5f8a3a">green zone</b>. Overshot? Hold <b>Valve</b> to let air out.`);
+ C.meter('psi','Pressure');
+ let p=0,disp=0,vel=0,pumping=false,venting=false,nextStroke=0,over=false,done=false;
+ const stroke=hasUpg('pump')?.07:.14;
+ C.frame(dt=>{if(done)return false;const now=performance.now();
+  if(pumping&&now>nextStroke){nextStroke=now+300;p+=stroke*rnd(.8,1.2);Snd.hiss(.16,.05);handleG.style.transition='transform .14s';handleG.style.transform='translateY(52px)';setTimeout(()=>handleG.style.transform='',150)}
+  if(venting){p=Math.max(0,p-.45*dt);if(Math.random()<.3)Snd.hiss(.05,.03)}
+  vel+=(p-disp)*90*dt;vel*=Math.pow(.02,dt);disp+=vel*dt;
+  needle.setAttribute('transform',`rotate(${ang(disp)+90} ${gx} ${gy})`);read.textContent=Math.max(0,disp).toFixed(2);
+  C.setMeter('psi',disp/4,disp.toFixed(2)+' bar',disp>hi);
+  if(p>3.2&&!over){over=true;C.mistake('Over-inflated! Let some air out.')}
+ });
+ C.hold('⬇ PUMP',()=>{pumping=true;nextStroke=0},()=>pumping=false,true);
+ C.hold('Valve (let air out)',()=>venting=true,()=>venting=false);
+ await new Promise(res=>{C.btn('✓ Done',()=>{if(p>=lo&&p<=hi){done=true;C.acc(1-Math.abs(p-tgt)/.3);C.good(`${p.toFixed(2)} bar — spot on!`);res()}else C.mistake(p<lo?'Still too soft.':'Too much pressure.')},'sage')});
+ await C.wait(600);
+}
+async function l1reinstall(C,R){
+ C.clear();const cx=480,cy=270,r=180;
+ C.add(`<circle cx="${cx}" cy="${cy}" r="34" fill="${PAL.greyD}" ${S(3)}/><circle cx="${cx}" cy="${cy}" r="12" fill="${INK}"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${PAL.cream}" stroke-width="3" stroke-dasharray="10 8"/>`);
+ const wg=C.add(tyreClose(cx,cy,r));const sx=330;wg.style.transform=`translateX(${sx}px)`;
+ C.hint('Slide the wheel back onto the hub.');let ptr=C.point(cx+sx,cy);
+ await new Promise(res=>{let s0=0,cur=sx,done=false;C.drag(wg,{down(p){if(done)return false;s0=p.x-cur;wg.style.transition='none';C.unpoint(ptr)},move(p){cur=clamp(p.x-s0,-60,420);wg.style.transform=`translateX(${cur}px)`},
+  up(){if(Math.abs(cur)<34){done=true;wg.style.transition='transform .2s';wg.style.transform='translateX(0)';Snd.thud();C.acc(1-Math.abs(cur)/50);res()}}})});
+ const nuts=[0,1,2,3,4].map(i=>{const p=nutP(cx,cy,r*.34,i);const n=C.add(nutSVG(p.x,p.y,15,true)+`<circle cx="${p.x}" cy="${p.y}" r="30" fill="none" stroke="${PAL.metal}" stroke-width="7" opacity=".5"/><circle class="tq" cx="${p.x}" cy="${p.y}" r="30" fill="none" stroke="${PAL.gold}" stroke-width="7" stroke-dasharray="0 999" transform="rotate(-90 ${p.x} ${p.y})"/><circle cx="${p.x}" cy="${p.y}" r="30" fill="none" stroke="#6f9a3c" stroke-width="7" stroke-dasharray="0 ${2*Math.PI*30*.72} ${2*Math.PI*30*.18} 999" transform="rotate(-90 ${p.x} ${p.y})" opacity=".55"/>`);n.p=p;return n});
+ await C.pickTool('torque',['wrench','pliers','hammer'],'Final tightening needs a tool that measures force.');
+ C.cursor('torque');
+ C.hint('Tighten in a <b>star pattern</b> (skip one nut each time). <b>Press & hold</b> a nut, release when the ring reaches the <b style="color:#5f8a3a">green</b>.');
+ const win=hasUpg('gloves')?[.68,.94]:[.72,.9];
+ const done=[];let dir=0;
+ await new Promise(res=>{nuts.forEach((n,i)=>{let v=0,holding=false;const c=2*Math.PI*30,tq=n.querySelector('.tq');
+  C.drag(n,{down(){if(done.includes(i))return false;
+    if(done.length===1){const d=(i-done[0]+5)%5;if(d!==2&&d!==3){C.mistake('Star pattern! Skip a nut.');return false}dir=d}
+    else if(done.length>1&&i!==(done[done.length-1]+dir)%5){C.mistake('Star pattern! Skip one nut each time.');return false}
+    holding=true;v=0;const t0=performance.now();C.frame(()=>{if(!holding)return false;v=(performance.now()-t0)/1500;tq.setAttribute('stroke-dasharray',`${Math.min(v,1.15)*c} 999`);if(Math.random()<.15)Snd.click()})},
+   up(){if(!holding)return;holding=false;
+    if(v<win[0]){C.toast('Too loose — hold a bit longer','meh');tq.setAttribute('stroke-dasharray','0 999');return}
+    if(v>win[1]){C.mistake('Over-torqued!');C.acc(.3)}else{C.acc(1-Math.abs(v-(win[0]+win[1])/2)/.2);Snd.ratchet()}
+    done.push(i);n.firstChild.firstChild.setAttribute('fill',PAL.metal);n.firstChild.style.transition='transform .4s';n.firstChild.style.transform='rotate(60deg)';
+    if(done.length===5)res()}})})});
+ C.cursor(null);wg.firstChild.style.transformOrigin=`${cx}px ${cy}px`;wg.style.transformOrigin=`${cx}px ${cy}px`;wg.style.transition='transform 1.6s ease-out';wg.style.transform='rotate(720deg)';
+ C.confetti(cx,cy);C.good('Wheel’s back on — ride ready!');await C.wait(1500);
+}
+
+// ================= LEVEL 2 — ENGINE =================
+const FIXOF={good:'ok',fouled:'clean',worn:'replace',dusty:'clean',torn:'replace',clogged:'clean',cracked:'replace'};
+const COMP={plug:{name:'Spark plug',tool:'plugsocket',at:[722,140]},filter:{name:'Air filter',tool:'hand',at:[305,210]},carb:{name:'Carburettor',tool:'screwdriver',at:[470,222]},fuel:{name:'Fuel line',tool:'flashlight',at:[545,150]}};
+function engineBay(o={}){
+ const m=o.missing||new Set(),col=COLORS[G.save.eq.color].hex;
+ let s=`<g filter="url(#rough)"><rect x="80" y="40" width="800" height="420" rx="44" fill="#544538" ${S(3)}/><path d="M110,420 C300,396 640,414 850,380" stroke="#3d322a" stroke-width="34" fill="none" opacity=".6"/>`;
+ s+=`<rect x="520" y="54" width="290" height="78" rx="32" fill="${col}" ${S()}/><text x="665" y="101" text-anchor="middle" class="lblB">FUEL</text>`;
+ s+=`<path d="M300,322 C300,270 380,252 450,258 L640,266 C700,272 712,340 690,388 C668,440 560,452 450,442 C360,434 300,380 300,322Z" fill="${PAL.grey}" ${S()}/><circle cx="420" cy="370" r="34" fill="${PAL.metal}" ${S(2.4)}/><circle cx="420" cy="370" r="10" fill="${PAL.greyD}"/>`;
+ s+=`<rect x="580" y="196" width="130" height="96" rx="10" fill="${PAL.metal}" ${S()}/>`+[0,1,2,3,4,5,6,7].map(i=>`<line x1="${594+i*15}" y1="200" x2="${594+i*15}" y2="288" stroke="${INK}" stroke-width="2"/>`).join('');
+ s+=`<rect x="700" y="182" width="46" height="120" rx="12" fill="${PAL.grey}" ${S()}/>`;
+ s+=bar(515,236,585,236,16,PAL.greyD);
+ s+=`<rect x="230" y="160" width="152" height="112" rx="14" fill="#6a5f55" ${S()}/>`;
+ const st=o.st||{};
+ if(!m.has('filter'))s+=`<rect x="244" y="172" width="124" height="88" rx="8" fill="${st.filter==='dusty'?'#a8987c':'#efe5c8'}" ${S(2.2)}/>`+Array.from({length:9},(_,i)=>`<line x1="${256+i*13}" y1="176" x2="${256+i*13}" y2="256" stroke="${INK}" stroke-width="1.4" opacity=".6"/>`).join('')+(st.filter==='torn'?`<path d="M290,200 L300,214 L288,226 L304,236 L296,214 Z" fill="#2a211c"/>`:'');
+ else s+=`<rect x="244" y="172" width="124" height="88" rx="8" fill="none" stroke="${PAL.cream}" stroke-width="2.5" stroke-dasharray="8 6"/>`;
+ if(!m.has('lid')&&!m.has('filter')&&!o.lidOff)s+=`<rect x="226" y="154" width="160" height="122" rx="16" fill="${PAL.greyD}" ${S()}/><circle cx="244" cy="172" r="5" fill="${PAL.metal}" ${S(1.5)}/><circle cx="368" cy="258" r="5" fill="${PAL.metal}" ${S(1.5)}/><text x="306" y="222" text-anchor="middle" class="lblB" fill="${PAL.cream}">AIR</text>`;
+ if(!m.has('carb'))s+=`<rect x="430" y="186" width="86" height="64" rx="10" fill="${PAL.metal}" ${S()}/><ellipse cx="473" cy="262" rx="30" ry="16" fill="${PAL.grey}" ${S(2.4)}/><circle cx="452" cy="212" r="7" fill="${st.carb==='clogged'?'#6b4a2a':PAL.greyD}" ${S(1.8)}/>`+bar(382,218,430,218,10,'#6a5f55');
+ else s+=`<rect x="430" y="186" width="86" height="80" rx="10" fill="none" stroke="${PAL.cream}" stroke-width="2.5" stroke-dasharray="8 6"/>`;
+ const fl='M600,132 C600,168 520,150 492,186';
+ if(!m.has('fuel'))s+=tube(fl,9,st.fuel==='cracked'?'#b88a4a':'#d9aa5c')+(st.fuel==='cracked'?`<path d="M548,152 l6,6 l-4,4 l6,6" fill="none" ${S(1.8)}/>`:'');
+ else s+=`<path d="${fl}" fill="none" stroke="${PAL.cream}" stroke-width="3" stroke-dasharray="8 6"/>`;
+ if(!m.has('plug'))s+=`<rect x="710" y="160" width="24" height="24" fill="${PAL.metal}" ${S(2.2)}/><path d="M713,160 L731,160 L728,118 L716,118 Z" fill="${PAL.white}" ${S(2.2)}/>`;
+ else s+=`<rect x="708" y="118" width="28" height="66" rx="4" fill="none" stroke="${PAL.cream}" stroke-width="2.5" stroke-dasharray="7 5"/>`;
+ if(!m.has('cap')&&!m.has('plug')&&!o.capOff)s+=`<path d="M708,124 L736,124 L734,90 L710,90 Z" fill="#2f2723" ${S(2.2)}/>`+tube('M722,90 C722,64 680,60 640,72',5,'#2f2723');
+ return s+'</g>';
+}
+function compDetail(c,state){
+ if(c==='plug'){const tip=state==='fouled'?'#1f1a17':'#c9a070';
+  let s=`<rect x="-7" y="-110" width="14" height="18" fill="${PAL.metal}" ${S(2)}/><path d="M-18,-92 L18,-92 L14,-24 L-14,-24 Z" fill="${PAL.white}" ${S()}/>`+[0,1,2,3].map(i=>`<line x1="-16" y1="${-84+i*12}" x2="16" y2="${-84+i*12}" stroke="${INK}" stroke-width="1.2" opacity=".4"/>`).join('');
+  s+=`<polygon points="${hexPts(0,-12,26)}" fill="${PAL.metal}" ${S()}/><rect x="-16" y="0" width="32" height="44" fill="${PAL.metal}" ${S()}/>`+[0,1,2,3,4].map(i=>`<line x1="-16" y1="${6+i*8}" x2="16" y2="${2+i*8}" stroke="${INK}" stroke-width="1.4"/>`).join('');
+  s+=`<rect x="-4" y="44" width="8" height="${state==='worn'?8:14}" rx="${state==='worn'?4:1}" fill="${tip}" ${S(2)}/><path d="M14,44 L14,${state==='worn'?76:66} L${state==='worn'?2:-2},${state==='worn'?76:66}" fill="none" stroke="${INK}" stroke-width="7"/><path d="M14,44 L14,${state==='worn'?76:66} L${state==='worn'?2:-2},${state==='worn'?76:66}" fill="none" stroke="${PAL.metal}" stroke-width="3"/>`;
+  if(state==='fouled')s+=`<g class="soot"><ellipse cx="0" cy="48" rx="22" ry="12" fill="#1f1a17" opacity=".85"/><circle cx="-12" cy="40" r="6" fill="#1f1a17" opacity=".7"/><circle cx="12" cy="56" r="5" fill="#1f1a17" opacity=".7"/></g>`;
+  return s}
+ if(c==='filter'){let s=`<rect x="-120" y="-72" width="240" height="144" rx="10" fill="${state==='dusty'?'#a8987c':'#efe5c8'}" ${S()}/>`+Array.from({length:15},(_,i)=>`<path d="M${-108+i*15.5},-66 L${-100+i*15.5},66" stroke="${INK}" stroke-width="1.4" opacity=".55"/>`).join('');
+  if(state==='dusty')s+=`<g class="dust">${Array.from({length:30},()=>`<circle cx="${rnd(-110,110)}" cy="${rnd(-60,60)}" r="${rnd(2,6)}" fill="#6e5f4c" opacity=".55"/>`).join('')}</g>`;
+  if(state==='torn')s+=`<path d="M-20,-30 L0,-10 L-14,8 L12,24 L30,-6 L8,-20 Z" fill="#2a211c" ${S(2)}/>`;return s}
+ if(c==='carb'){let s=`<circle cx="0" cy="0" r="78" fill="${PAL.gold}" ${S(3)}/><circle cx="0" cy="0" r="56" fill="#e7c978" ${S(2)}/><circle cx="0" cy="0" r="16" fill="#1d1612" ${S(2.5)}/><circle cx="-4" cy="-4" r="4" fill="#fff" opacity=".5"/>`;
+  if(state==='clogged')s+=`<g class="gunk"><path d="M-22,-8 C-20,-26 6,-24 16,-14 C28,-2 18,22 0,20 C-18,20 -26,8 -22,-8Z" fill="#6b4a2a" ${S(2)}/><circle cx="-6" cy="-2" r="4" fill="#8a6a40"/><circle cx="8" cy="6" r="3" fill="#8a6a40"/></g>`;return s}
+ if(c==='fuel'){let s=tube('M-160,0 C-80,-30 80,30 160,0',22,state==='cracked'?'#c79a54':'#e2b366');
+  if(state==='cracked')s+=`<path d="M-10,-6 l8,6 l-6,6 l8,6 M30,2 l6,8 l-6,4" fill="none" ${S(2)}/><path d="M0,24 q-6,10 0,14 q6,-4 0,-14Z" fill="#8fb6d9" ${S(1.5)} class="drop"/>`;return s}
+}
+function partIcon(c,label,sel){
+ const inner=c==='plug'?`<g transform="scale(.42)">${compDetail('plug','good')}</g>`:c==='filter'?`<g transform="scale(.26)">${compDetail('filter','good')}</g>`:c==='fuel'?`<g transform="scale(.28)">${compDetail('fuel','good')}</g>`:`<g transform="scale(.4)">${compDetail('carb','good')}</g>`;
+ return `<g filter="url(#rough)"><circle r="48" fill="${PAL.white}" ${S(2.5)}/>${inner}</g><text y="70" text-anchor="middle" class="lblB" fill="${PAL.cream}">${label}</text>`;
+}
+async function l2open(C,R){
+ C.clear();const T={x:110,y:40,s:1.75};
+ C.add(`<g transform="translate(${T.x},${T.y}) scale(${T.s})">${vespa({cowlSlot:true})}</g>`);
+ const slot=$('#cowlSlot');slot.innerHTML=`<g class="cw" filter="url(#rough)">${cowlSVG(COLORS[G.save.eq.color].hex)}</g><g class="latch"><rect x="176" y="186" width="26" height="12" rx="4" fill="${PAL.gold}" ${S(2)}/></g>`;
+ const cw=slot.querySelector('.cw'),latch=slot.querySelector('.latch');
+ C.add(`<text x="480" y="560" text-anchor="middle" class="lblB" fill="${PAL.cream}">It cranks… but won’t start.</text>`);
+ C.hint('The engine sits under the side cowl. <b>Flip the latch</b> first.');
+ let ptr=C.point(T.x+189*T.s,T.y+192*T.s);
+ await new Promise(res=>{C.tap(latch,()=>{C.unpoint(ptr);Snd.click();latch.setAttribute('transform','rotate(-50 189 192)');res()})});
+ C.hint('Now <b>drag the cowl</b> up and away.');ptr=C.point(T.x+110*T.s,T.y+150*T.s);
+ await new Promise(res=>{let s=null,done=false;C.drag(cw,{down(p){if(done)return false;s=p;C.unpoint(ptr)},move(p){cw.setAttribute('transform',`translate(${(p.x-s.x)/T.s},${(p.y-s.y)/T.s})`)},up(p){if(dist(p,s)>110){done=true;cw.style.transition='opacity .4s';cw.style.opacity=0;latch.remove();Snd.thud();setTimeout(res,450)}else cw.setAttribute('transform','')}})});
+ C.good('Engine exposed!');await C.wait(600);
+}
+async function l2diag(C,R){
+ const comps=['plug','filter','carb','fuel'],verdict={};
+ const draw=()=>{C.clear();C.add(engineBay({st:R.st}));comps.forEach(c=>{const [x,y]=COMP[c].at,v=verdict[c];
+   const g=C.add(`<g><circle cx="${x}" cy="${y}" r="34" fill="${v?'rgba(168,185,138,.35)':'rgba(255,240,200,.18)'}" stroke="${v?PAL.sage:PAL.gold}" stroke-width="4" ${v?'':'class="pulse"'}/><g transform="translate(${x},${y-50})"><rect x="-58" y="-16" width="116" height="26" rx="12" fill="${PAL.cream}" ${S(2)}/><text y="4" text-anchor="middle" class="lbl" font-size="16">${COMP[c].name}${v?' · '+(v==='ok'?'OK':v==='clean'?'clean':'replace'):''}</text></g></g>`);g.dataset.c=c;if(!v)C.tap(g,()=>pickComp(c))})};
+ let resolveAll,busy=false;const allDone=new Promise(r=>resolveAll=r);
+ async function pickComp(c){if(busy)return;busy=true;
+  await C.pickTool(COMP[c].tool,['plugsocket','screwdriver','flashlight','hand','hammer'].filter(t=>t!==COMP[c].tool),`How do you inspect the <b>${COMP[c].name.toLowerCase()}</b>?`);
+  C.clear();C.panel(200,40,560,420);C.add(`<text x="480" y="84" text-anchor="middle" class="lblB">${COMP[c].name}</text><g transform="translate(480,${c==='plug'?250:260})" filter="url(#rough)">${compDetail(c,R.st[c])}</g>`);
+  const v=await C.choose([{label:'✓ Looks good',value:'ok',cls:'sage'},{label:'Clean it',value:'clean'},{label:'Replace it',value:'replace',cls:'gold'}],'What does it need?');
+  const right=FIXOF[R.st[c]];if(v!==right){C.mistake(`Not quite — it needs ${right==='ok'?'nothing':right==='clean'?'a clean':'replacing'}.`)}else{C.good('Good diagnosis!');C.acc(1)}
+  verdict[c]=right;busy=false;draw();if(comps.every(x=>verdict[x]))resolveAll()}
+ draw();C.hint('Tap each <b>glowing part</b> to inspect it with the right tool, then decide: OK, clean or replace.');
+ await allDone;await C.wait(500);
+}
+async function l2repair(C,R){
+ const faulty=['plug','filter','carb','fuel'].filter(c=>R.st[c]!=='good');
+ for(const c of faulty){const need=FIXOF[R.st[c]];C.clear();C.panel(200,40,560,420);C.add(`<text x="480" y="84" text-anchor="middle" class="lblB">${COMP[c].name} — ${need}</text>`);
+  if(need==='clean'){
+   const det=C.add(`<g transform="translate(480,250)" filter="url(#rough)">${compDetail(c,R.st[c])}</g>`);
+   if(c==='plug'){await C.pickTool('wirebrush',['blower','sandpaper','hammer'],'Carbon build-up! Pick a tool to scrub it off.');
+    C.cursor('wirebrush');C.hint('Scrub <b>back and forth</b> across the sooty tip.');const soot=det.querySelector('.soot');const hit=C.add(`<rect x="200" y="200" width="560" height="200" fill="transparent"/>`);
+    await new Promise(res=>{let lastX=null,dir=0,rev=0,done=false;C.drag(hit,{down(p){lastX=p.x},move(p){if(done||lastX===null)return;const d=p.x-lastX;if(Math.abs(d)>12){const nd=Math.sign(d);if(nd!==dir){rev++;dir=nd;Snd.noise(.06,.05,3000)}lastX=p.x}soot.setAttribute('opacity',Math.max(0,1-rev/14));if(rev>=14){done=true;res()}}})});
+    det.querySelector('rect[fill="#1f1a17"]')?.setAttribute('fill','#c9a070');C.cursor(null);
+   }else if(c==='filter'){await C.pickTool('blower',['wirebrush','sponge','hammer'],'Dusty filter. Pick a tool to clean it.');
+    C.hint('Hold <b>Blow</b> to blast the dust out.');C.meter('cl','Clean');const dust=det.querySelector('.dust');let f=0,on=false;
+    await new Promise(res=>{C.frame(dt=>{if(on){f+=dt/2.4;if(Math.random()<.5)C.puff(480+rnd(-110,110),250+rnd(-60,60),'#a8987c');if(Math.random()<.3)Snd.hiss(.08,.04)}dust.setAttribute('opacity',1-f);C.setMeter('cl',f);if(f>=1){res();return false}});C.hold('💨 Blow',()=>on=true,()=>on=false,true)});
+   }else{await C.pickTool('carbspray',['blower','wirebrush','glue'],'The jet is clogged with old fuel varnish. Pick a cleaner.');
+    C.hint('Tap the jet to spray cleaner — <b>6 good blasts</b>.');const gunk=det.querySelector('.gunk');let n=0;
+    await new Promise(res=>{const h=C.add(`<circle cx="480" cy="250" r="80" fill="transparent"/>`);C.tap(h,()=>{n++;Snd.hiss(.2,.06);C.puff(480+rnd(-20,20),250+rnd(-20,20),'#f4ecd9');gunk.style.transition='all .3s';gunk.setAttribute('transform',`scale(${1-n/7})`);gunk.setAttribute('opacity',1-n/6);if(n>=6){h.remove();res()}})});
+   }
+   C.acc(1);C.good('Squeaky clean!');R.st[c]='good';await C.wait(700);
+  }else{
+   const lbl={plug:['B7ES','B9HS','BR6ES'],filter:['Foam 70×50','Paper Ø60','Foam 50×30'],fuel:['5 mm hose','3 mm hose','8 mm hose']}[c];
+   C.add(`<g transform="translate(330,170)"><g filter="url(#rough)" opacity=".85">${partIcon(c,'')}</g><text y="80" text-anchor="middle" class="lblB">old: ${lbl[0]}</text><path d="M-40,-50 L40,50 M40,-50 L-40,50" stroke="${PAL.red}" stroke-width="5" opacity=".6"/></g>`);
+   C.add(`<circle cx="630" cy="170" r="54" fill="none" stroke="${PAL.sage}" stroke-width="4" stroke-dasharray="9 7"/><text x="630" y="250" text-anchor="middle" class="lbl">drop new part here</text>`);
+   C.hint(`Match the part number <b>${lbl[0]}</b>. Drag the right new part into the slot.`);
+   const opts=shuffle(lbl);
+   await new Promise(res=>{let done=false;opts.forEach((l,i)=>{const home={x:330+i*150,y:375};const g=C.add(`<g transform="scale(.8)">${partIcon(c,'')}</g><text y="56" text-anchor="middle" class="lblB">${l}</text>`);g.setAttribute('transform',`translate(${home.x},${home.y})`);
+     C.drag(g,{down(){if(done)return false},move(p){g.setAttribute('transform',`translate(${p.x},${p.y})`)},up(p){if(dist(p,{x:630,y:170})<70){if(l===lbl[0]){done=true;g.setAttribute('transform','translate(630,170)');Snd.thud();C.acc(1);res()}else{C.mistake(`${l} is the wrong part.`);g.setAttribute('transform',`translate(${home.x},${home.y})`)}}else g.setAttribute('transform',`translate(${home.x},${home.y})`)}})})});
+   C.good('Fresh part fitted!');R.st[c]='good';await C.wait(700);
+  }
+ }
+}
+async function l2assemble(C,R){
+ C.clear();const tf={x:72,y:-14,s:.85},T=p=>({x:tf.x+p[0]*tf.s,y:tf.y+p[1]*tf.s});
+ const missing=new Set(['carb','fuel','filter','lid','plug','cap','cover']);
+ const slots={carb:[473,222],fuel:[545,155],filter:[306,216],lid:[306,216],plug:[722,150],cap:[722,105],cover:[480,250]};
+ const deps={fuel:['carb'],filter:['carb'],lid:['filter'],cap:['plug'],cover:['carb','fuel','filter','lid','plug','cap']};
+ const msgs={fuel:'Fit the carburettor before the fuel line.',filter:'The filter mounts onto the carburettor — carb first.',lid:'Filter goes in before the lid!',cap:'Spark plug first, then the cap.',cover:'Finish the engine before closing the cover.'};
+ const names={carb:'Carb',fuel:'Fuel line',filter:'Filter',lid:'Air box lid',plug:'Plug',cap:'Plug cap',cover:'Cover'};
+ const bay=C.add('');const redraw=()=>{bay.innerHTML=`<g transform="translate(${tf.x},${tf.y}) scale(${tf.s})">${engineBay({missing,lidOff:missing.has('lid'),capOff:missing.has('cap')})}</g>`};redraw();
+ C.hint('Rebuild the engine! Drag each part to its spot — <b>in an order that makes sense</b>.');
+ const icons={carb:`<rect x="-30" y="-22" width="60" height="44" rx="8" fill="${PAL.metal}" ${S(2.2)}/><ellipse cy="26" rx="22" ry="9" fill="${PAL.grey}" ${S(2)}/>`,fuel:tube('M-30,-10 C-10,-30 10,30 30,10',7,'#d9aa5c'),filter:`<rect x="-32" y="-22" width="64" height="44" rx="5" fill="#efe5c8" ${S(2)}/>`+[0,1,2,3,4,5].map(i=>`<line x1="${-24+i*10}" y1="-18" x2="${-24+i*10}" y2="18" stroke="${INK}" stroke-width="1.2"/>`).join(''),lid:`<rect x="-36" y="-26" width="72" height="52" rx="10" fill="${PAL.greyD}" ${S(2.2)}/><text y="6" text-anchor="middle" class="lbl" fill="${PAL.cream}" font-size="14">AIR</text>`,plug:`<g transform="scale(.32)">${compDetail('plug','good')}</g>`,cap:`<path d="M-12,-20 L12,-20 L10,20 L-10,20Z" fill="#2f2723" ${S(2)}/>`,cover:`<g transform="translate(-60,-46) scale(.55)"><path d="${VP.cowl}" fill="${COLORS[G.save.eq.color].hex}" ${S(3)}/></g>`};
+ const order=shuffle(Object.keys(names));
+ await new Promise(res=>{order.forEach((k,i)=>{const home={x:90+i*130,y:470};const g=C.add(`<g filter="url(#rough)"><circle r="40" fill="${PAL.white}" ${S(2.4)}/>${icons[k]}</g><text y="60" text-anchor="middle" class="lbl" fill="${PAL.cream}" font-size="17">${names[k]}</text>`);g.setAttribute('transform',`translate(${home.x},${home.y})`);
+  let done=false;
+  C.drag(g,{down(){if(done)return false},move(p){g.setAttribute('transform',`translate(${p.x},${p.y})`)},up(p){
+   let best=null,bd=1e9;for(const s in slots){if(!missing.has(s)||s==='cover')continue;const d=dist(p,T(slots[s]));if(d<bd){bd=d;best=s}}
+   const back=()=>g.setAttribute('transform',`translate(${home.x},${home.y})`);
+   if(k==='cover'){if(p.y<430&&p.x>150&&p.x<810){best='cover';bd=0}else{back();return}}
+   if(!best||bd>75){back();return}
+   if(best!==k&&!(k==='lid'&&best==='filter')&&!(k==='filter'&&best==='lid')){C.mistake(`That doesn't go there.`);back();return}
+   const unmet=(deps[k]||[]).filter(d=>missing.has(d));if(unmet.length){C.mistake(msgs[k]);back();return}
+   done=true;missing.delete(k);g.remove();redraw();Snd.thud();C.sparks(p.x,p.y);
+   if(!missing.size)res()}})})});
+ bay.innerHTML+=`<g class="bounceIn"><rect x="150" y="60" width="660" height="340" rx="40" fill="${COLORS[G.save.eq.color].hex}" ${S(3)} filter="url(#rough)"/><text x="480" y="240" text-anchor="middle" class="lblB" font-size="34">Cover on ✓</text></g>`;
+ C.acc(1);C.good('Engine reassembled!');await C.wait(900);
+}
+async function l2start(C,R){
+ C.clear();const T={x:20,y:150,s:1.15};
+ const vg=C.add(`<g transform="translate(${T.x},${T.y}) scale(${T.s})"><g class="vv">${vespa({})}</g></g>`);
+ C.panel(520,50,420,400);C.add(`<text x="730" y="92" text-anchor="middle" class="lblB">Start-up controls</text>`);
+ const st={fuel:'OFF',choke:false,key:false,run:false};
+ const fuelG=C.add('');const chokeG=C.add('');const keyG=C.add('');
+ const drawCtl=()=>{const fa={OFF:-150,ON:-90,RES:-30}[st.fuel];
+  fuelG.innerHTML=`<g filter="url(#rough)"><circle cx="620" cy="190" r="44" fill="${PAL.metal}" ${S(2.6)}/><path d="M620,190 L${620+Math.cos(fa*Math.PI/180)*36},${190+Math.sin(fa*Math.PI/180)*36}" ${S(8)}/><circle cx="620" cy="190" r="10" fill="${PAL.red}" ${S(2)}/></g><text x="566" y="152" class="lbl" font-size="15">OFF</text><text x="608" y="136" class="lbl" font-size="15">ON</text><text x="656" y="152" class="lbl" font-size="15">RES</text><text x="620" y="258" text-anchor="middle" class="lbl">Fuel tap</text>`;
+  chokeG.innerHTML=`<g filter="url(#rough)"><rect x="790" y="150" width="90" height="70" rx="12" fill="${PAL.white}" ${S(2.4)}/>${bar(835,185,st.choke?884:840,st.choke?160:185,6,PAL.navy)}<circle cx="835" cy="185" r="8" fill="${PAL.metal}" ${S(2)}/></g><text x="835" y="258" text-anchor="middle" class="lbl">Choke ${st.choke?'ON':'off'}</text>`;
+  keyG.innerHTML=`<g filter="url(#rough)"><circle cx="620" cy="340" r="38" fill="${PAL.greyD}" ${S(2.6)}/><g transform="rotate(${st.key?90:0} 620 340)"><rect x="612" y="300" width="16" height="44" rx="5" fill="${PAL.gold}" ${S(2)}/><circle cx="620" cy="300" r="14" fill="${PAL.gold}" ${S(2)}/></g><circle cx="676" cy="306" r="8" fill="${st.key?'#9fd36a':'#59624a'}" ${S(1.6)}/></g><text x="620" y="404" text-anchor="middle" class="lbl">Ignition</text>`};
+ drawCtl();
+ const kickG=C.add(`<g filter="url(#rough)"><path d="M790,300 L880,300 L880,330 L820,330 L800,380 L784,372 Z" fill="${PAL.metal}" ${S(2.6)}/><rect x="850" y="292" width="40" height="16" rx="5" fill="#2f2723"/></g><text x="836" y="404" text-anchor="middle" class="lbl">Kick-start</text>`);
+ const meter=C.add(`<rect x="560" y="420" width="340" height="22" rx="10" fill="${PAL.white}" ${S(2.2)}/><rect x="${560+340*(hasUpg('gloves')?.36:.42)}" y="420" width="${340*(hasUpg('gloves')?.28:.16)}" height="22" fill="#9cc174"/><rect class="mk" x="560" y="414" width="8" height="34" rx="3" fill="${PAL.red}" ${S(1.6)}/>`);meter.style.display='none';
+ const zone=hasUpg('gloves')?[.36,.64]:[.42,.58];let ph=0;
+ C.frame(dt=>{ph+=dt*2.6;const m=(Math.sin(ph)+1)/2;meter.querySelector('.mk').setAttribute('x',556+m*340);meter.m=m});
+ C.hint('Get her running: set the controls, then <b>kick-start</b> when the marker hits the green.');
+ C.tap(fuelG,()=>{st.fuel={OFF:'ON',ON:'RES',RES:'OFF'}[st.fuel];Snd.click();drawCtl()});
+ C.tap(chokeG,()=>{st.choke=!st.choke;Snd.click();drawCtl();if(st.run&&!st.choke)chokeOff&&chokeOff()});
+ C.tap(keyG,()=>{st.key=!st.key;Snd.click();drawCtl();meter.style.display=st.key?'':'none'});
+ let chokeOff=null;
+ await new Promise(res=>{let done=false;C.tap(kickG,()=>{if(done)return;Snd.thud();kickG.style.transition='transform .15s';kickG.style.transform='rotate(14deg)';kickG.style.transformOrigin='800px 300px';setTimeout(()=>kickG.style.transform='',160);
+  if(st.fuel==='OFF'){C.mistake('No fuel reaching the carb — open the fuel tap.');Snd.sputter();return}
+  if(!st.key){C.mistake('The ignition is off!');return}
+  if(!st.choke){C.mistake('Cold engine — use the choke first.');Snd.sputter();return}
+  const m=meter.m;if(m<zone[0]||m>zone[1]){C.toast('Weak kick — time it in the green!','meh');C.acc(.6);Snd.sputter();return}
+  if(st.fuel==='RES')C.toast('Runs on reserve… ON would be better','meh');
+  done=true;res()})});
+ st.run=true;Snd.startLoop('engine');vg.firstChild.querySelector('.vv').classList.add('vibe');C.good('VROOM! She’s alive!');
+ const puffs=setInterval(()=>{if(!C.alive()){clearInterval(puffs);return}C.puff(T.x+44*T.s,T.y+224*T.s)},260);
+ C.hint('Engine’s running and warming up… now <b>push the choke back in</b> before it floods!');
+ const t0=performance.now();
+ await new Promise(res=>{chokeOff=res;C.frame(()=>{if(performance.now()-t0>4500&&st.choke&&!chokeOff.warned){chokeOff.warned=1;C.mistake('It’s flooding — choke off!')}})});
+ C.acc(performance.now()-t0<4500?1:.5);C.good('Smooth idle. Repair verified!');await C.wait(1800);clearInterval(puffs);Snd.stopLoop();
+}
+// ================= LEVEL 3 — ELECTRICAL =================
+function batterySVG(x,y,o={}){return `<g filter="url(#rough)"><rect x="${x}" y="${y}" width="280" height="180" rx="16" fill="${o.fresh?'#3b4a7a':'#2c2f3a'}" ${S(3)}/><rect x="${x+20}" y="${y+50}" width="240" height="70" rx="10" fill="${o.fresh?PAL.butter:PAL.pinkL}" ${S(2)}/><text x="${x+140}" y="${y+96}" text-anchor="middle" class="lblB" font-size="30">12V${o.fresh?' ✶ NEW':''}</text>
+ <rect x="${x+40}" y="${y-20}" width="44" height="22" rx="4" fill="${PAL.red}" ${S(2.4)}/><text x="${x+62}" y="${y-28}" text-anchor="middle" class="lblB" fill="${PAL.cream}">+</text>
+ <rect x="${x+196}" y="${y-20}" width="44" height="22" rx="4" fill="#26201c" ${S(2.4)}/><text x="${x+218}" y="${y-28}" text-anchor="middle" class="lblB" fill="${PAL.cream}">−</text></g>`}
+function probeSVG(col){return `<g filter="url(#rough)"><line x1="0" y1="0" x2="0" y2="16" stroke="${PAL.metal}" stroke-width="4"/><rect x="-8" y="14" width="16" height="56" rx="6" fill="${col}" ${S(2.4)}/><rect x="-11" y="20" width="22" height="6" rx="2" fill="${col}" ${S(1.6)}/></g>`}
+async function l3battery(C,R){
+ C.clear();const bx=110,by=250;C.add(batterySVG(bx,by));
+ const term={pos:{x:bx+62,y:by-12},neg:{x:bx+218,y:by-12}};
+ C.add(`<g filter="url(#rough)"><rect x="560" y="70" width="230" height="350" rx="26" fill="${PAL.butter}" ${S(3)}/><rect x="585" y="95" width="180" height="76" rx="8" fill="#cfd8c0" ${S(2.4)}/><circle cx="645" cy="400" r="11" fill="#26201c" ${S(2)}/><circle cx="715" cy="400" r="11" fill="${PAL.red}" ${S(2)}/><circle cx="675" cy="285" r="58" fill="${PAL.greyD}" ${S(2.6)}/></g>`);
+ const disp=C.add(`<text x="675" y="148" text-anchor="middle" font-family="Gaegu" font-weight="700" font-size="42" fill="${INK}">- - -</text>`).firstChild;
+ const knob=C.add(`<path d="M675,285 L675,240" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="675" cy="285" r="14" fill="${PAL.metal}" ${S(2)}/>`);
+ const modes=[['DCV','V⎓',-135],['ACV','V~',-45],['OHM','Ω',45],['AMP','A',135]];
+ let mode=hasUpg('meter')?'DCV':'OFF';
+ const setMode=m=>{mode=m;const a=modes.find(x=>x[0]===m);knob.setAttribute('transform',`rotate(${a?a[2]+90:0} 675 285)`);disp.textContent=m==='OFF'?'- - -':'0.00'};
+ modes.forEach(([id,lbl,a])=>{const x=675+Math.cos(a*Math.PI/180)*84,y=285+Math.sin(a*Math.PI/180)*84;const g=C.add(`<circle cx="${x}" cy="${y}" r="20" fill="${PAL.cream}" ${S(2)}/><text x="${x}" y="${y+7}" text-anchor="middle" class="lblB">${lbl}</text>`);C.tap(g,()=>{if(hasUpg('meter'))return;Snd.click();setMode(id)})});
+ if(mode==='DCV')setMode('DCV');
+ const cables=C.add('');
+ const probes={red:{home:{x:470,y:450},p:{x:470,y:450},jack:{x:715,y:400},col:PAL.red,on:null},black:{home:{x:850,y:450},p:{x:850,y:450},jack:{x:645,y:400},col:'#26201c',on:null}};
+ const drawCables=()=>{cables.innerHTML=Object.values(probes).map(o=>tube(`M${o.jack.x},${o.jack.y} C${o.jack.x},${o.jack.y+120} ${o.p.x},${o.p.y+190} ${o.p.x},${o.p.y+70}`,5,o.col)).join('')};
+ Object.values(probes).forEach(o=>{o.g=C.add(probeSVG(o.col));o.g.setAttribute('transform',`translate(${o.p.x},${o.p.y})`)});drawCables();
+ await C.pickTool('multimeter',['flashlight','wrench','hammer'],'Lights are dead. First, test the battery. What measures voltage?');
+ C.hint(hasUpg('meter')?'Auto-range meter ready. Put the <b>red</b> probe on <b>+</b> and <b>black</b> on <b>−</b>.':'Set the dial to <b>DC volts (V⎓)</b>, then put <b>red on +</b> and <b>black on −</b>. A healthy battery reads <b>12.4 V or more</b>.');
+ const v=R.battV;
+ const reset=()=>{Object.values(probes).forEach(o=>{o.on=null;o.p={...o.home};o.g.setAttribute('transform',`translate(${o.p.x},${o.p.y})`)});drawCables()};
+ await new Promise(res=>{let done=false;
+  const evalP=()=>{const r=probes.red.on,b=probes.black.on;if(!r||!b)return;
+   if(r===b){C.toast('Both probes on one terminal reads nothing','meh');disp.textContent='0.00';setTimeout(reset,700);return}
+   if(mode!=='DCV'){disp.textContent=mode==='OHM'?'OL':mode==='OFF'?'- - -':'0.00';C.mistake(mode==='OFF'?'The meter is switched off!':'Wrong setting — battery voltage is DC volts.');setTimeout(reset,900);return}
+   if(r==='neg'){disp.textContent='-'+v.toFixed(2);C.mistake('Reversed! Red goes on +.');setTimeout(reset,900);return}
+   disp.textContent=v.toFixed(2)+' V';Snd.beep();done=true;res()};
+  Object.entries(probes).forEach(([k,o])=>C.drag(o.g,{down(){if(done)return false;o.on=null},move(p){o.p={x:p.x,y:p.y-8};o.g.setAttribute('transform',`translate(${o.p.x},${o.p.y})`);drawCables()},up(p){
+   for(const t of ['pos','neg']){if(dist({x:o.p.x,y:o.p.y},term[t])<40){o.on=t;o.p={x:term[t].x+(k==='red'?-8:8),y:term[t].y};o.g.setAttribute('transform',`translate(${o.p.x},${o.p.y})`);drawCables();Snd.click();evalP();return}}}}));
+ });
+ const need=v<12.4;
+ const ans=await C.choose([{label:'Healthy — keep it',value:false,cls:'sage'},{label:'Weak — replace it',value:true,cls:'gold'}],`The meter reads <b>${v.toFixed(2)} V</b>. Verdict?`);
+ if(ans!==need)C.mistake(need?'Below 12.4 V — that battery is tired.':'Above 12.4 V is healthy!');else{C.acc(1);C.good('Correct call!')}
+ R.battNeed=need;await C.wait(600);
+}
+const FUSECOL={5:'#c9a27a','7.5':'#7a5236',10:'#c9574a',15:'#5578b8',20:'#e3c34a'};
+function fuseSVG(x,y,amp,blown){return `<g filter="url(#rough)"><rect x="${x-20}" y="${y-34}" width="40" height="44" rx="6" fill="${FUSECOL[amp]}" ${S(2.4)}/><text x="${x}" y="${y-6}" text-anchor="middle" class="lblB" font-size="17" fill="${amp==20?INK:PAL.cream}">${amp}</text><rect x="${x-14}" y="${y+8}" width="8" height="26" fill="${PAL.metal}" ${S(1.6)}/><rect x="${x+6}" y="${y+8}" width="8" height="26" fill="${PAL.metal}" ${S(1.6)}/>${blown?`<path d="M${x-8},${y-26} l6,6 m4,4 l6,6" stroke="#2a1d16" stroke-width="2"/>`:`<path d="M${x-8},${y-26} l16,16" stroke="${PAL.metal}" stroke-width="2" opacity=".7"/>`}</g>`}
+async function l3fuses(C,R){
+ C.clear();C.panel(190,50,580,300);C.add(`<text x="480" y="92" text-anchor="middle" class="lblB">Fuse box</text>`);
+ const slots=R.fuses.map((f,i)=>{const x=290+i*127,y=210;C.add(`<rect x="${x-40}" y="${y-76}" width="80" height="150" rx="10" fill="#e8dfca" ${S(2)}/><text x="${x}" y="${y-50}" text-anchor="middle" class="lblB">${f.amp}A</text>`);const g=C.add(fuseSVG(x,y,f.amp,f.blown));return{...f,x,y,g,tested:false,mark:null}});
+ await C.pickTool('multimeter',['pliers','flashlight','screwdriver'],'Now the fuses. Pick a tool to test them for continuity.');
+ C.hint('Tap each fuse to test it. <b>Beep</b> = good. <b>Silence</b> = blown.');
+ C.add(`<text x="480" y="390" text-anchor="middle" class="lblB" fill="${PAL.cream}">spare fuses — drag onto a blown slot</text>`);
+ const spares=[5,'7.5',10,15,20];
+ let resolve;const done=new Promise(r=>resolve=r);
+ const check=()=>{if(slots.every(s=>s.tested)&&slots.every(s=>!s.blown))resolve()};
+ slots.forEach(s=>C.tap(s.g,()=>{if(s.tested)return;s.tested=true;if(s.blown){Snd.tone(200,.1,'square',.03);s.mark=C.add(`<path d="M${s.x-14},${s.y+52} l28,28 M${s.x+14},${s.y+52} l-28,28" stroke="${PAL.red}" stroke-width="6" stroke-linecap="round"/>`)}else{Snd.beep();C.add(`<path d="M${s.x-14},${s.y+64} l10,10 l20,-22" fill="none" stroke="#5f8a3a" stroke-width="6" stroke-linecap="round"/>`)}check()}));
+ spares.forEach((amp,i)=>{const hx=280+i*100,hy=455;const mk=()=>{const g=C.add(fuseSVG(0,0,amp,false));g.setAttribute('transform',`translate(${hx},${hy})`);
+  C.drag(g,{move(p){g.setAttribute('transform',`translate(${p.x},${p.y})`)},up(p){const s=slots.find(s=>Math.abs(p.x-s.x)<55&&Math.abs(p.y-s.y)<80);g.setAttribute('transform',`translate(${hx},${hy})`);if(!s)return;
+   if(!s.tested){C.toast('Test that fuse first','meh');return}
+   if(!s.blown){C.mistake('That fuse was fine!');return}
+   if(String(amp)!==String(s.amp)){C.mistake(Number(amp)>Number(s.amp)?`Too big — a ${amp}A fuse won't protect a ${s.amp}A circuit!`:`Too small — that slot needs ${s.amp}A.`);return}
+   s.g.remove();s.mark&&s.mark.remove();s.g=C.add(fuseSVG(s.x,s.y,s.amp,false));s.blown=false;Snd.click();C.sparks(s.x,s.y-20);C.add(`<path d="M${s.x-14},${s.y+64} l10,10 l20,-22" fill="none" stroke="#5f8a3a" stroke-width="6" stroke-linecap="round"/>`);check()}})};mk()});
+ await done;C.acc(1);C.good('All fuses healthy!');await C.wait(600);
+}
+const WIRES=[{id:'bat',col:'#c9574a',name:'Battery +'},{id:'gnd',col:'#2a2420',name:'Ground'},{id:'head',col:'#e3c34a',name:'Headlight'},{id:'ind',col:'#5578b8',name:'Indicators'},{id:'horn',col:'#6f9a3c',name:'Horn'}];
+function wireIcon(id,x,y){const ic={bat:`<rect x="-14" y="-10" width="28" height="20" rx="3" fill="${PAL.navy}" ${S(2)}/><text y="6" text-anchor="middle" class="lbl" fill="#fff" font-size="16">+</text>`,gnd:`<path d="M0,-12 L0,0 M-12,0 L12,0 M-8,6 L8,6 M-4,12 L4,12" ${S(2.6)}/>`,head:`<circle r="11" fill="${PAL.butter}" ${S(2)}/><path d="M14,-8 l8,-4 M15,0 l9,0 M14,8 l8,4" ${S(2)}/>`,ind:`<path d="M-14,0 l10,-10 l0,6 l12,0 l0,8 l-12,0 l0,6Z" fill="${PAL.amber}" ${S(2)}/>`,horn:`<path d="M-12,-5 L-2,-5 L12,-14 L12,14 L-2,5 L-12,5Z" fill="${PAL.metal}" ${S(2)}/>`}[id];return `<g transform="translate(${x},${y})">${ic}</g>`}
+async function l3wires(C,R){
+ C.clear();C.panel(560,60,330,400);
+ const left=WIRES.map((w,i)=>({...w,x:260,y:120+i*72}));
+ const rightOrder=shuffle(WIRES.map(w=>w.id));const right={};rightOrder.forEach((id,i)=>right[id]={x:620,y:120+i*72});
+ C.add(`<g filter="url(#rough)"><rect x="70" y="90" width="70" height="370" rx="30" fill="#4a403a" ${S(3)}/><text x="105" y="480" text-anchor="middle" class="lbl" fill="${PAL.cream}">harness</text></g>`);
+ rightOrder.forEach(id=>{const r=right[id];C.add(`<g filter="url(#rough)"><circle cx="${r.x}" cy="${r.y}" r="13" fill="${PAL.metal}" ${S(2.4)}/><circle cx="${r.x}" cy="${r.y}" r="4" fill="${INK}"/>${wireIcon(id,r.x+46,r.y)}</g><text x="${r.x+78}" y="${r.y+6}" class="lbl">${WIRES.find(w=>w.id===id).name}</text>`)});
+ const wl=C.add('');
+ const conn={};left.forEach(w=>{if(!R.loose.includes(w.id))conn[w.id]=true});
+ const draw=(drag)=>{wl.innerHTML=left.map(w=>{const stem=tube(`M140,${w.y} C200,${w.y} 210,${w.y} ${w.x},${w.y}`,9,w.col);if(conn[w.id]){const r=right[w.id];return stem+tube(`M${w.x},${w.y} C${w.x+150},${w.y} ${r.x-150},${r.y} ${r.x},${r.y}`,9,w.col)}
+   if(drag&&drag.id===w.id)return stem+tube(`M${w.x},${w.y} C${w.x+120},${w.y} ${drag.p.x-120},${drag.p.y} ${drag.p.x},${drag.p.y}`,9,w.col)+`<circle cx="${drag.p.x}" cy="${drag.p.y}" r="8" fill="${PAL.gold}" ${S(2)}/>`;
+   return stem+`<circle cx="${w.x}" cy="${w.y}" r="9" fill="${PAL.gold}" ${S(2)} class="pulse"/>`}).join('')};draw();
+ C.hint(`Three wires have shaken loose. Drag each <b>loose end</b> to its terminal.<br><small>Colour code: <b style="color:#c9574a">red</b> battery+, <b>black</b> ground, <b style="color:#b8962a">yellow</b> headlight, <b style="color:#5578b8">blue</b> indicators, <b style="color:#5f8a3a">green</b> horn.</small>`);
+ await new Promise(res=>{left.forEach(w=>{if(conn[w.id])return;const h=C.add(`<circle cx="${w.x}" cy="${w.y}" r="26" fill="transparent"/>`);
+  C.drag(h,{down(){if(conn[w.id])return false},move(p){draw({id:w.id,p})},up(p){const hit=Object.entries(right).find(([id,r])=>dist(p,r)<36);
+   if(hit){if(hit[0]===w.id){conn[w.id]=true;Snd.click();C.sparks(p.x,p.y);C.acc(1);h.remove()}else{Snd.zap();C.fx(`<path d="${starPath(p.x,p.y,22,.3,6)}" fill="${PAL.gold}" class="spark"/>`,500);C.mistake(`Zap! ${w.name} doesn't go to ${WIRES.find(x=>x.id===hit[0]).name}.`)}}
+   draw();if(left.every(x=>conn[x.id]))res()}})})});
+ C.good('All wires connected!');await C.wait(700);
+}
+async function l3repair(C,R){
+ C.clear();const y=270;
+ C.add(`<text x="480" y="120" text-anchor="middle" class="lblB" fill="${PAL.cream}">Damaged harness section</text>`);
+ C.add(tube(`M80,${y} L880,${y}`,22,'#5a4f48'));
+ const spots=R.damage.map(x=>({x,stage:0}));
+ const gfx=spots.map(s=>{const w=C.add(`<g class="dmg" filter="url(#rough)"><rect x="${s.x-26}" y="${y-13}" width="52" height="26" fill="#5a4f48"/><path d="M${s.x-20},${y-12} l6,8 l6,-10 l6,12 l6,-8 l6,10 l6,-12" fill="none" stroke="#c8873e" stroke-width="2.5"/><path d="M${s.x-16},${y+12} l8,-7 l8,8 l8,-6 l8,8" fill="none" stroke="#c8873e" stroke-width="2.5"/></g><circle class="ring pulse" cx="${s.x}" cy="${y}" r="42" fill="none" stroke="${PAL.gold}" stroke-width="3.5" stroke-dasharray="8 6"/><circle cx="${s.x}" cy="${y}" r="44" fill="transparent"/>`);return w});
+ const T=['stripper','crimper','heatgun','pliers','hammer','glue'];
+ for(let i=0;i<spots.length;i++){const s=spots[i],g=gfx[i],dm=g.querySelector('.dmg');
+  await C.pickTool('stripper',T.filter(t=>t!=='stripper'),`Damage #${i+1}: cut out the frayed bit and strip the ends. Which tool?`);
+  C.hint('Tap the frayed spot to cut & strip.');await C.tapOnce(g);Snd.click();
+  dm.innerHTML=`<rect x="${s.x-28}" y="${y-14}" width="56" height="28" fill="${GARAGES[G.save.eq.garage].wall}"/><rect x="${s.x-30}" y="${y-5}" width="18" height="10" fill="#d8873e" ${S(1.5)}/><rect x="${s.x+12}" y="${y-5}" width="18" height="10" fill="#d8873e" ${S(1.5)}/>`;
+  await C.pickTool('crimper',T.filter(t=>t!=='crimper'),'Copper exposed. Join the ends with a butt connector — which tool?');
+  C.hint('Tap to crimp the connector on.');await C.tapOnce(g);Snd.clank();
+  dm.innerHTML+=`<g class="bounceIn"><rect x="${s.x-30}" y="${y-12}" width="60" height="24" rx="8" fill="${PAL.denim}" ${S(2.2)}/><path d="M${s.x-10},${y-12} l0,24 M${s.x+10},${y-12} l0,24" ${S(1.6)}/></g>`;
+  await C.pickTool('heatgun',T.filter(t=>t!=='heatgun'),'Seal it with heat-shrink tubing. Which tool?');
+  C.hint('Hold <b>Heat</b> and release when the meter reaches the <b style="color:#5f8a3a">green</b> — don’t melt it!');
+  const sleeve=C.add(`<rect x="${s.x-46}" y="${y-22}" width="92" height="44" rx="12" fill="${PAL.navy}" opacity=".55" ${S(2)}/>`);
+  C.meter('heat','Heat',.72);let h=0,on=false,fin=false;
+  await new Promise(res=>{C.frame(dt=>{if(fin)return false;if(on){h+=dt/1.8;if(Math.random()<.4)C.fx(`<path d="M${s.x+rnd(-30,30)},${y-30} q6,-12 0,-24" fill="none" stroke="${PAL.amber}" stroke-width="2.5" class="puff"/>`,900)}
+   const sc=1-clamp(h,0,1)*.38;sleeve.firstChild.setAttribute('height',44*sc);sleeve.firstChild.setAttribute('y',y-22*sc);sleeve.firstChild.setAttribute('opacity',.55+h*.4);
+   C.setMeter('heat',h/1.1,Math.round(h*100)+'°',h>.94);if(h>1.1){on=false}});
+   C.hold('🔥 Heat',()=>{on=true;Snd.hiss(.3,.04)},()=>{if(fin||h<.15)return;on=false;fin=true;
+    if(h>.94){C.mistake('Melted the sleeve!');sleeve.firstChild.setAttribute('fill','#3a2a22');C.acc(.3)}else if(h<.72){C.toast('Still loose — a bit under-heated','meh');C.acc(.6)}else{C.acc(1-Math.abs(h-.83)/.2);C.good('Perfect seal!')}
+    res()},true)});
+  C.actions([]);$('#meters').innerHTML='';g.querySelector('.ring').remove();
+ }
+ await C.wait(600);
+}
+async function l3install(C,R){
+ C.clear();
+ if(!R.battNeed){C.panel(260,150,440,200);C.add(`<text x="480" y="240" text-anchor="middle" class="lblB" font-size="30">Battery is healthy ✓</text><text x="480" y="280" text-anchor="middle" class="lbl">No replacement needed — skipping.</text>`);C.hint('Your test showed the battery is fine. On to testing!');await C.wait(1600);return}
+ const bx=340,by=240;C.add(`<rect x="${bx-30}" y="${by-60}" width="340" height="270" rx="20" fill="#4a403a" ${S(3)} filter="url(#rough)"/>`);
+ let bat=C.add(batterySVG(bx,by));
+ const term={pos:{x:bx+62,y:by-10},neg:{x:bx+218,y:by-10}};
+ const cab=C.add('');const conn={pos:true,neg:true};
+ const drawCab=()=>{cab.innerHTML=(conn.pos?tube(`M${term.pos.x},${term.pos.y} C${term.pos.x},${by-110} 160,${by-80} 120,${by-110}`,10,PAL.red):tube(`M200,${by-90} C170,${by-90} 150,${by-100} 120,${by-110}`,10,PAL.red))+(conn.neg?tube(`M${term.neg.x},${term.neg.y} C${term.neg.x},${by-110} 790,${by-80} 840,${by-110}`,10,'#26201c'):tube(`M760,${by-90} C790,${by-90} 810,${by-100} 840,${by-110}`,10,'#26201c'))};drawCab();
+ const hits={pos:C.add(`<circle cx="${term.pos.x}" cy="${term.pos.y}" r="34" fill="transparent"/>`),neg:C.add(`<circle cx="${term.neg.x}" cy="${term.neg.y}" r="34" fill="transparent"/>`)};
+ await C.pickTool('wrench',['pliers','hammer','screwdriver'],'Swap the battery. Which tool loosens the terminal bolts?');
+ C.hint('Disconnect the old battery. <b>Which terminal comes off first?</b>');
+ await new Promise(res=>{const tapT=t=>{if(!conn[t]||conn.done)return;if(t==='pos'&&conn.neg){C.mistake('Sparks! Always disconnect − (negative) first.');Snd.zap();C.sparks(term.pos.x,term.pos.y)}Snd.ratchet();conn[t]=false;drawCab();if(!conn.pos&&!conn.neg){conn.done=true;res()}};C.tap(hits.pos,()=>tapT('pos'));C.tap(hits.neg,()=>tapT('neg'))});
+ C.hint('Lift the old battery <b>out</b> (drag it up).');
+ await new Promise(res=>{let s=null,done=false;C.drag(bat,{down(p){if(done)return false;s=p},move(p){bat.setAttribute('transform',`translate(${p.x-s.x},${p.y-s.y})`)},up(p){if(dist(p,s)>130){done=true;bat.remove();Snd.thud();res()}else bat.setAttribute('transform','')}})});
+ const nb=C.add(batterySVG(0,0,{fresh:true}));nb.setAttribute('transform','translate(640,330) scale(.6)');
+ C.hint('Drop the <b>new battery</b> into the tray.');
+ await new Promise(res=>{let done=false;C.drag(nb,{down(){if(done)return false},move(p){nb.setAttribute('transform',`translate(${p.x-140},${p.y-90})`)},up(p){const d=dist({x:p.x-140,y:p.y-90},{x:bx,y:by});if(d<60){done=true;nb.setAttribute('transform',`translate(${bx},${by})`);Snd.thud();C.acc(1-d/90);res()}else nb.setAttribute('transform','translate(640,330) scale(.6)')}})});
+ Object.values(hits).forEach(h=>h.parentNode.appendChild(h));
+ C.hint('Connect it up. <b>Which terminal goes on first?</b>');
+ await new Promise(res=>{let n=0;const tapT=t=>{if(conn[t])return;if(t==='neg'&&!conn.pos){C.mistake('Connect + (positive) first, negative last!');Snd.zap()}conn[t]=true;Snd.ratchet();drawCab();cab.parentNode.appendChild(cab);if(conn.pos&&conn.neg)res()};C.tap(hits.pos,()=>tapT('pos'));C.tap(hits.neg,()=>tapT('neg'))});
+ C.good('Fresh battery installed!');await C.wait(800);
+}
+async function l3test(C,R){
+ C.clear();const T={x:20,y:130,s:1.2};
+ const vg=C.add(`<g transform="translate(${T.x},${T.y}) scale(${T.s})">${vespa({})}</g>`);
+ const fxG=C.add('');
+ C.panel(560,40,380,430);C.add(`<text x="750" y="84" text-anchor="middle" class="lblB">Switch panel</text>`);
+ const items=[['key','Ignition'],['head','Headlight'],['left','◀ Indicator'],['right','Indicator ▶'],['horn','Horn']];
+ const st={key:false},ok={};let fault=R.fault,fixed=false,diagnosing=false;
+ const btns={};
+ items.forEach(([id,label],i)=>{const y=120+i*66;const g=C.add(`<g filter="url(#rough)"><rect x="600" y="${y}" width="300" height="52" rx="18" fill="${PAL.white}" ${S(2.4)}/></g><text x="625" y="${y+34}" class="lblB">${label}</text><g class="st"></g>`);btns[id]={g,y};C.tap(g,()=>press(id))});
+ const mark=(id,good)=>{const b=btns[id];b.g.querySelector('.st').innerHTML=good?`<path d="M860,${b.y+26} l8,8 l16,-18" fill="none" stroke="#5f8a3a" stroke-width="5" stroke-linecap="round"/>`:`<path d="M860,${b.y+16} l20,20 M880,${b.y+16} l-20,20" stroke="${PAL.red}" stroke-width="5" stroke-linecap="round"/>`};
+ const L=(x,y)=>({x:T.x+x*T.s,y:T.y+y*T.s});
+ const show=(html,ms)=>{const g=C.add(html,fxG);if(ms)setTimeout(()=>g.remove(),ms);return g};
+ C.hint('Final check! Switch on the <b>ignition</b>, then test every circuit.');
+ let resolveAll;const all=new Promise(r=>resolveAll=r);
+ async function press(id){if(diagnosing)return;Snd.click();
+  if(id==='key'){st.key=!st.key;mark('key',true);ok.key=true;if(st.key){const h=L(352,53);show(`<circle cx="${h.x+40}" cy="${h.y-30}" r="7" fill="#9fd36a" ${S(1.5)}/>`)}else fxG.innerHTML='';return}
+  if(!st.key){C.mistake('Ignition is off — nothing happens.');return}
+  const broken=id===fault&&!fixed;
+  if(id==='head'){const h=L(352,53);show(`<circle cx="${h.x+30}" cy="${h.y}" r="70" fill="url(#glow)" class="${broken?'flicker':''}"/>`,1800)}
+  if(id==='left'||id==='right'){const p=L(id==='left'?250:26,id==='left'?35:150);show(`<circle cx="${p.x}" cy="${p.y}" r="${broken?6:16}" fill="${broken?'#6a5a40':'url(#glowO)'}" class="${broken?'':'blink'}"/>`+(broken?`<text x="${p.x}" y="${p.y-20}" text-anchor="middle" class="lblB" fill="${PAL.cream}">dark…</text>`:''),2000);if(broken)C.toast('Blinks way too fast on this side…','meh')}
+  if(id==='horn'){if(broken){Snd.click();C.toast('Click… but no honk','meh')}else{Snd.horn();const p=L(330,80);show(`<path d="M${p.x+30},${p.y-20} q14,20 0,40 M${p.x+46},${p.y-30} q20,30 0,60" fill="none" stroke="${PAL.cream}" stroke-width="4" class="puff"/>`,1200)}}
+  await C.wait(500);
+  if(broken){mark(id,false);diagnosing=true;
+   const ans=await C.choose([{label:'Loose ground wire',value:'head'},{label:'Blown bulb',value:'left'},{label:'Faulty horn unit',value:'horn'},{label:'Blown fuse',value:'fuse'}],`The <b>${items.find(x=>x[0]===id)[1]}</b> fails. Symptom: <i>${{head:'flickers dimly',left:'that side stays dark & blinks fast',horn:'relay clicks, no sound'}[fault]}</i>. What’s the cause?`);
+   const right=id==='right'?'left':id;
+   if(ans!==right){C.mistake('Not that — look at the symptom again.')}else C.acc(1);
+   C.hint('Fixing it…');Snd.ratchet();await C.wait(900);fixed=true;diagnosing=false;C.good('Fixed! Test it again.');C.hint('Re-test that circuit, then the rest.');return}
+  mark(id,true);ok[id]=true;if(items.every(([k])=>ok[k]))resolveAll()}
+ await all;C.confetti(300,250);C.good('Every circuit works!');await C.wait(1300);
+}
+
+// ================= LEVEL 4 — BODY PANEL =================
+const BENCH={x:68.6,y:-257.2,s:3.4};
+const BENCH_BB=[22,108,220,208];
+const toBench=(lx,ly)=>({x:BENCH.x+lx*BENCH.s,y:BENCH.y+ly*BENCH.s});
+const COWL_SCREWS=[[55,190],[196,190],[86,138],[178,134]];
+async function l4remove(C,R){
+ C.clear();const T={x:150,y:50,s:1.6};
+ C.add(`<g transform="translate(${T.x},${T.y}) scale(${T.s})">${vespa({cowlSlot:true})}</g>`);
+ const slot=$('#cowlSlot');const col=COLORS[G.save.eq.color].hex;
+ slot.innerHTML=`<g class="cw" filter="url(#rough)">${cowlSVG(col,{dents:R.dents.map(d=>[d.lx,d.ly,10+d.depth*2])})}<path d="M40,196 l20,-4 l12,6" fill="none" stroke="${INK}" stroke-width="1.6"/></g>`;
+ const cw=slot.querySelector('.cw');
+ const screws=COWL_SCREWS.map(([lx,ly])=>{const x=T.x+lx*T.s,y=T.y+ly*T.s;const g=C.add(`<g class="head"><circle cx="${x}" cy="${y}" r="12" fill="${PAL.metal}" ${S(2.4)}/><path d="M${x-7},${y} L${x+7},${y} M${x},${y-7} L${x},${y+7}" ${S(2.4)}/></g><circle cx="${x}" cy="${y}" r="48" fill="transparent"/>`);return{x,y,g}});
+ C.add(`<text x="480" y="508" text-anchor="middle" class="lblB" fill="${PAL.cream}">A little bump… and a lot of dents.</text>`);
+ await C.pickTool('phillips',['screwdriver','wrench','pliers'],'Four <b>cross-head</b> screws hold the panel. Which tool?');
+ C.cursor('phillips');C.hint('Draw <b>circles around each screw</b> to undo it — anticlockwise (lefty-loosey)!');
+ const ptr=C.point(screws[0].x+30,screws[0].y-30);
+ for(const s of screws){const head=s.g.querySelector('.head');await spinGesture(C,s.g,s.x,s.y,-1,1.5,a=>head.setAttribute('transform',`rotate(${a*180/Math.PI} ${s.x} ${s.y})`));C.unpoint(ptr);Snd.ratchet();head.classList.add('unscrew');head.style.transformOrigin=`${s.x}px ${s.y}px`;setTimeout(()=>s.g.remove(),600)}
+ C.cursor(null);C.acc(1);cw.style.transition='transform .8s ease, opacity .8s';cw.style.transform='translate(-30px,-60px) rotate(-8deg)';cw.style.opacity=0;Snd.thud();
+ C.good('Panel off — to the workbench!');await C.wait(900);
+}
+function benchPanel(){return `<g transform="translate(${BENCH.x},${BENCH.y}) scale(${BENCH.s})" filter="url(#rough)"><path d="${VP.cowl}" fill="${COLORS[G.save.eq.color].hex}" stroke="${INK}" stroke-width="1"/></g>`}
+async function l4hammer(C,R){
+ C.clear();C.add(`<rect x="90" y="440" width="780" height="40" rx="8" fill="#8a6a4a" ${S(3)} filter="url(#rough)"/>`);C.add(benchPanel());
+ const dg=R.dents.map(d=>{const p=toBench(d.lx,d.ly);d.x=p.x;d.y=p.y;const g=C.add('');d.g=g;return d});
+ const drawD=d=>{const r=18+d.depth*9;d.g.innerHTML=d.depth>0?`<ellipse cx="${d.x}" cy="${d.y}" rx="${r}" ry="${r*.72}" fill="url(#dentG)"/><path d="M${d.x-r*.8},${d.y-r*.3} Q${d.x},${d.y-r*.95} ${d.x+r*.8},${d.y-r*.3}" fill="none" stroke="#fff" stroke-width="2.4" opacity=".6"/>`:`<ellipse cx="${d.x}" cy="${d.y}" rx="30" ry="22" fill="#2a1d16" opacity=".09"/>`};dg.forEach(drawD);
+ await C.pickTool('dolly',['hammer','sledge','wrench'],'Time to beat out the dents. Which tool shapes thin metal gently?');
+ C.cursor('dolly');C.hint('Tap (or Space) when the shrinking <b>ring meets the gold circle</b>. Off-beat hits leave new dings!');
+ const tol=hasUpg('gloves')?10:7,TGT=26;
+ const tapA=C.add(`<rect width="960" height="600" fill="transparent"/>`);
+ for(let i=0;i<dg.length;i++){const d=dg[i];const tgt=C.over(`<circle cx="${d.x}" cy="${d.y}" r="${TGT}" fill="none" stroke="${PAL.gold}" stroke-width="5"/><circle cx="${d.x}" cy="${d.y}" r="${TGT-tol}" fill="none" stroke="${PAL.gold}" stroke-width="1.5" stroke-dasharray="3 4"/><circle cx="${d.x}" cy="${d.y}" r="${TGT+tol}" fill="none" stroke="${PAL.gold}" stroke-width="1.5" stroke-dasharray="3 4"/>`);
+  const ring=C.over(`<circle cx="${d.x}" cy="${d.y}" r="90" fill="none" stroke="${PAL.pink}" stroke-width="5"/>`).firstChild;
+  const period=1.25-i*.09-(R.n-1)*0;let t=0,rr=90,live=true;
+  C.frame(dt=>{if(!live)return false;t+=dt;rr=90-((t%period)/period)*84;ring.setAttribute('r',rr)});
+  await new Promise(res=>{const hit=()=>{if(!live||run_paused())return;const e=Math.abs(rr-TGT);Snd.clank();C.puff(d.x+rnd(-10,10),d.y+rnd(-10,10),'#efe5d0');
+    if(e<3){d.depth--;C.acc(1);C.toast('Perfect!','good')}else if(e<tol){d.depth--;C.acc(.75)}else{C.acc(0);C.mistake('Off-beat — that left a ding!');C.add(`<circle cx="${d.x+rnd(-40,40)}" cy="${d.y+rnd(-30,30)}" r="5" fill="#2a1d16" opacity=".25"/>`)}
+    drawD(d);if(d.depth<=0){live=false;tgt.remove();ring.parentNode.remove();res()}};
+   const fnTap=()=>hit();tapA.onpointerdown=e=>{e.preventDefault();fnTap()};C.key((e,ty)=>{if(e.code==='Space'&&ty==='down'&&!e.repeat){e.preventDefault();fnTap()}})});
+  C.run.keys=[];
+ }
+ C.cursor(null);C.good('Dents knocked out!');await C.wait(700);
+}
+function run_paused(){return RUN&&RUN.paused}
+async function l4filler(C,R){
+ C.clear();C.add(`<rect x="90" y="440" width="780" height="40" rx="8" fill="#8a6a4a" ${S(3)} filter="url(#rough)"/>`);
+ const cv=C.canvas();const sf=new Surface(VP.cowl,BENCH,BENCH_BB,6);R.sf=sf;
+ const low=sf.layer('low',k=>{const p=sf.cellXY(k);let m=0;R.dents.forEach(d=>{const dd=Math.hypot(p.x-d.x,p.y-d.y);m=Math.max(m,clamp(1.25-dd/42,0,1))});return m});
+ const f=sf.layer('f',0);const base=hex2rgb(COLORS[G.save.eq.color].hex),FIL=[214,190,176];
+ const render=()=>sf.render(k=>{let c=mix(base,[60,45,35],low[k]*.32*(1-Math.min(1,f[k])));if(f[k]>0)c=mix(c,FIL,Math.min(1,f[k])*.95);return c});render();
+ C.over(`<g transform="translate(${BENCH.x},${BENCH.y}) scale(${BENCH.s})"><path d="${VP.cowl}" fill="none" stroke="${INK}" stroke-width="1"/></g>`);
+ // mixing
+ cv.style.pointerEvents='none';
+ const mixG=C.over(`<g filter="url(#rough)"><rect x="700" y="60" width="210" height="150" rx="16" fill="${PAL.cream}" ${S(2.4)}/><ellipse cx="770" cy="150" rx="44" ry="26" fill="#d6beb0" ${S(2.4)}/><rect x="840" y="96" width="30" height="80" rx="6" fill="${PAL.red}" ${S(2.4)}/><text x="805" y="88" text-anchor="middle" class="lbl" font-size="16">filler + hardener</text></g><g class="drops"></g>`);
+ C.hint('Mix the filler first: about <b>3 drops</b> of hardener for this blob. Too much and it cracks, too little and it never sets.');
+ let drops=0;
+ await new Promise(res=>{C.btn('+ Hardener drop',()=>{drops++;Snd.pop();mixG.querySelector('.drops').innerHTML+=`<circle cx="${752+drops*9}" cy="${142+(drops%2)*8}" r="4" fill="${PAL.red}"/>`});
+  C.btn('Mix it',()=>{if(!drops){C.toast('Add some hardener first','meh');return}if(drops===3){C.acc(1);C.good('Perfect mix!')}else if(drops===2||drops===4){C.acc(.7);C.toast('Close enough…','meh')}else{C.acc(.3);C.mistake(drops<2?'Way too little hardener!':'Way too much hardener!')}C.actions([]);mixG.remove();res()},'sage')});
+ cv.style.pointerEvents='';
+ await C.pickTool('spreader',['sander','wirebrush','hammer'],'Fill the low spots. Which tool spreads filler?');
+ C.cursor('spreader');C.hint('Swipe filler over the <b>dark low spots</b>. Don’t waste it on the good metal!');
+ C.meter('cov','Low spots filled',.95);C.meter('waste','Wasted filler');
+ const lowN=sf.frac(k=>low[k]>.5);
+ await new Promise(res=>{let last=null,done=false;dragOn(cv,{down(p){last=p},move(p){if(done||!last)return;const mv=Math.min(30,dist(p,last));last=p;sf.each(p.x,p.y,26,(k,w)=>{f[k]+=w*mv*.03});render();
+   const cov=sf.frac(k=>low[k]>.5&&f[k]>=.8)/lowN,waste=sf.frac(k=>low[k]<.1&&f[k]>.4);C.setMeter('cov',cov);C.setMeter('waste',waste*4,Math.round(waste*100)+'%',waste>.06);
+   if(cov>=.95){done=true;C.acc(1-waste*4);res()}},up(){last=null}})});
+ C.cursor(null);C.good('Filler on — let it cure…');await C.wait(900);
+}
+async function l4sand(C,R){
+ const sf=R.sf;C.clear();C.add(`<rect x="90" y="440" width="780" height="40" rx="8" fill="#8a6a4a" ${S(3)} filter="url(#rough)"/>`);
+ const cv=C.canvas();C.over(`<g transform="translate(${BENCH.x},${BENCH.y}) scale(${BENCH.s})"><path d="${VP.cowl}" fill="none" stroke="${INK}" stroke-width="1"/></g>`);
+ const f=sf.L.f,v=sf.layer('v',k=>f[k]>.3?1.1:.18+sf.noise[k]*.1);const burnT=hasUpg('sander')?-.75:-.5;
+ const base=hex2rgb(COLORS[G.save.eq.color].hex),FIL=[214,190,176],MET=[168,164,156];
+ const render=()=>sf.render(k=>{let c=f[k]>.3?FIL:mix(base,[236,232,222],.25);if(v[k]<burnT)return MET;if(v[k]>.06)c=mix(c,[90,70,55],Math.min(1,v[k])*(.18+sf.noise[k]*.35));else c=mix(c,[255,255,250],.12);return c});render();
+ await C.pickTool('sander',['spreader','wirebrush','p80'],'Filler’s hard and lumpy. Pick a tool to smooth it.');
+ C.cursor('sander');C.hint('Hold and move the sander to <b>smooth the whole panel</b>. Stay too long in one spot and you’ll burn through to bare metal!');
+ C.meter('sm','Smoothness',.9);C.meter('burn','Burn-through');
+ let pos=null,burnWarn=0,fin=false;const rate=hasUpg('sander')?1.5:1.15;
+ dragOn(cv,{down(p){pos=p},move(p){pos=p},up(){pos=null}});
+ C.frame(dt=>{if(fin)return false;if(!pos)return;sf.each(pos.x,pos.y,32,(k,w)=>{v[k]-=rate*dt*(.4+w)});if(Math.random()<.25)Snd.noise(.05,.03,2200);if(Math.random()<.3)C.fx(`<circle cx="${pos.x+rnd(-26,26)}" cy="${pos.y+rnd(-20,20)}" r="${rnd(3,7)}" fill="#efe5d0" class="puff"/>`,1000);render();
+  const sm=sf.frac(k=>v[k]<=.06&&v[k]>=burnT),bu=sf.frac(k=>v[k]<burnT);C.setMeter('sm',sm);C.setMeter('burn',bu*10,Math.round(bu*100)+'%',bu>.02);
+  if(bu>.015*(burnWarn+1)){burnWarn++;C.mistake('Burn-through! Keep the sander moving.')}});
+ await new Promise(res=>{C.btn('✓ Check surface',()=>{const sm=sf.frac(k=>v[k]<=.06&&v[k]>=burnT),bu=sf.frac(k=>v[k]<burnT);if(sm<.9){C.mistake(`Still rough in places (${Math.round(sm*100)}% smooth).`);return}C.acc(sm-bu*3);fin=true;res()},'sage')});
+ C.cursor(null);C.good('Silky smooth!');await C.wait(600);
+}
+async function l4refit(C,R){
+ C.clear();const T={x:150,y:50,s:1.6};
+ C.add(`<g transform="translate(${T.x},${T.y}) scale(${T.s})">${vespa({cowlSlot:true})}</g>`);
+ const slot=$('#cowlSlot');slot.innerHTML=`<path d="${VP.cowl}" fill="none" stroke="${PAL.cream}" stroke-width="2" stroke-dasharray="6 5"/><g class="cw" filter="url(#rough)">${cowlSVG(COLORS[G.save.eq.color].hex,{decals:false})}<ellipse cx="110" cy="165" rx="40" ry="20" fill="#fff" opacity=".18"/></g>`;
+ const cw=slot.querySelector('.cw');let off={x:150,y:-70};const place=()=>cw.setAttribute('transform',`translate(${off.x},${off.y})`);place();
+ C.hint('Line the panel up with the <b>dashed outline</b> — precisely!');
+ await new Promise(res=>{let s=null,o0=null,done=false;C.drag(cw,{down(p){if(done)return false;s=p;o0={...off}},move(p){off={x:o0.x+(p.x-s.x)/T.s,y:o0.y+(p.y-s.y)/T.s};place()},up(){const d=Math.hypot(off.x,off.y);
+   if(d<9){done=true;C.acc(1-d/12);off={x:0,y:0};place();Snd.thud();res()}else if(d<40){C.mistake('Not lined up — the clips won’t catch.')}}})});
+ await C.pickTool('phillips',['screwdriver','hammer','wrench'],'Panel seated. Screw it back on — which tool?');
+ C.cursor('phillips');C.hint('Circle each screw <b>clockwise</b> — righty-tighty!');
+ for(const [lx,ly] of COWL_SCREWS){const x=T.x+lx*T.s,y=T.y+ly*T.s;const g=C.add(`<g class="head"><circle cx="${x}" cy="${y}" r="12" fill="${PAL.metal}" ${S(2.4)}/><path d="M${x-7},${y} L${x+7},${y} M${x},${y-7} L${x},${y+7}" ${S(2.4)}/></g><circle cx="${x}" cy="${y}" r="48" fill="transparent"/><circle cx="${x}" cy="${y}" r="22" fill="none" stroke="${PAL.gold}" stroke-width="3" stroke-dasharray="6 5" class="pulse"/>`);
+  const head=g.querySelector('.head');await spinGesture(C,g,x,y,1,1,a=>head.setAttribute('transform',`rotate(${a*180/Math.PI} ${x} ${y})`));g.lastChild.remove();Snd.ratchet()}
+ C.cursor(null);C.confetti(480,250);C.good('Good as new!');await C.wait(1300);
+}
+
+// ================= LEVEL 5 — PAINT =================
+const PAINT_T={x:170,y:56,s:1.55},PAINT_BB=[20,30,390,212];
+function paintOverlay(tape){
+ const T=PAINT_T;
+ return `<g transform="translate(${T.x},${T.y}) scale(${T.s})" filter="url(#rough)"><path d="${VP.body}" fill="none" ${S(1.6)}/>
+ <path d="M300,48 L262,37" stroke="${INK}" stroke-width="5" stroke-linecap="round"/>${bar(262,37,248,34,6,PAL.brown)}
+ <path d="${VP.seat}" fill="${PAL.brown}" ${S(1.6)}/><circle cx="352" cy="53" r="11" fill="${PAL.cream}" ${S(1.6)}/><rect x="20" y="150" width="11" height="17" rx="3" fill="#d9776a" ${S(1.4)}/>
+ ${tape?`<g opacity=".92"><path d="M60,104 L202,100 L202,126 L60,128Z" fill="${PAL.denim}" ${S(1.2)}/><circle cx="352" cy="53" r="13" fill="${PAL.denim}" ${S(1.2)}/><rect x="16" y="146" width="19" height="25" fill="${PAL.denim}" ${S(1.2)}/></g>`:''}</g>`;
+}
+function setupPaint(C,R){
+ const sf=R.psf;C.clear();C.add(`<g transform="translate(${PAINT_T.x},${PAINT_T.y}) scale(${PAINT_T.s})">${vespa({decals:false})}</g>`);
+ const cv=C.canvas();C.over(paintOverlay(R.tape));
+ const render=()=>sf.render(k=>paintColor(R,k));render();return{cv,render};
+}
+function paintColor(R,k){const sf=R.psf,L=sf.L;
+ let c=R.oldFaded;if(L.scr[k])c=mix(c,[250,247,238],.65*(1-L.scuff[k]));
+ c=mix(c,[214,208,198],L.scuff[k]*.55);
+ if(L.pr[k]>0)c=mix(c,[192,188,184],Math.min(1,L.pr[k]));
+ if(L.pa[k]>0)c=mix(c,R.newRGB,Math.min(1,L.pa[k]*1.05));
+ if(L.cl[k]>0)c=mix(c,[255,255,255],Math.min(1,L.cl[k])*.06);
+ if(L.gl[k]>0)c=mix(c,[255,255,255],Math.min(1,L.gl[k])*.12*(.4+sf.noise[k]*.2+((k%sf.w)/sf.w)*.5));
+ if(L.dirt[k]>0)c=mix(c,[110,88,60],Math.min(1,L.dirt[k])*.85);
+ return c}
+function initPaint(R){
+ const sf=new Surface(VP.body,PAINT_T,PAINT_BB,6);R.psf=sf;
+ const blobs=Array.from({length:16},()=>({x:rnd(sf.x0,sf.x0+sf.w*6),y:rnd(sf.y0+40,sf.y0+sf.h*6),r:rnd(25,70)}));
+ sf.layer('dirt',k=>{const p=sf.cellXY(k);let m=0;blobs.forEach(b=>{m=Math.max(m,1.3-Math.hypot(p.x-b.x,p.y-b.y)/b.r)});m+=(p.y-sf.y0)/(sf.h*6)*.5-.1;return clamp(m,0,1)+sf.noise[k]*.15});
+ const lines=Array.from({length:12},()=>{const x=rnd(sf.x0,sf.x0+sf.w*6),y=rnd(sf.y0,sf.y0+sf.h*6),a=rnd(-.5,.5);return{x,y,dx:Math.cos(a),dy:Math.sin(a),len:rnd(40,110)}});
+ sf.layer('scr',k=>{const p=sf.cellXY(k);for(const l of lines){const t=(p.x-l.x)*l.dx+(p.y-l.y)*l.dy;if(t<0||t>l.len)continue;const d=Math.abs((p.x-l.x)*l.dy-(p.y-l.y)*l.dx);if(d<4)return 1}return 0});
+ ['scuff','pr','pa','cl','gl'].forEach(n=>sf.layer(n,0));
+ R.oldFaded=mix(hex2rgb(COLORS[G.save.eq.color].hex),[226,220,206],.45);R.tape=false;
+}
+async function l5wash(C,R){
+ initPaint(R);const {cv,render}=setupPaint(C,R);const sf=R.psf,d=sf.L.dirt;
+ C.add(`<text x="480" y="508" text-anchor="middle" class="lblB" fill="${PAL.cream}">Faded, scratched & muddy. Let’s give her a new coat!</text>`);
+ await C.pickTool('sponge',['sander','spraygun','polisher'],'Start by cleaning the body. Which tool?');
+ C.cursor('sponge');C.hint('Scrub away all the <b>mud and grime</b>.');C.meter('clean','Clean',.95);
+ await new Promise(res=>{let last=null,done=false;dragOn(cv,{down(p){last=p},move(p){if(done||!last)return;const mv=Math.min(30,dist(p,last));last=p;sf.each(p.x,p.y,34,(k,w)=>{d[k]=Math.max(0,d[k]-mv*.022*(.4+w))});if(Math.random()<.35)C.fx(`<circle cx="${p.x+rnd(-20,20)}" cy="${p.y+rnd(-20,20)}" r="${rnd(4,9)}" fill="#fff" opacity=".85" ${S(1)} class="foam"/>`,1200);render();
+  const cl=sf.frac(k=>d[k]<.12);C.setMeter('clean',cl);if(cl>=.95){done=true;res()}},up(){last=null}})});
+ for(let k=0;k<sf.n;k++)d[k]=0;C.cursor(null);
+ for(let i=0;i<24;i++)C.fx(`<path d="M${rnd(250,750)},${rnd(110,300)} q-4,10 0,14 q4,-4 0,-14Z" fill="#9cc3e0" ${S(1)} class="drop"/>`,1000);Snd.hiss(.8,.06);render();
+ C.acc(1);C.good('Sparkling clean!');await C.wait(900);
+}
+async function l5sand(C,R){
+ const {cv,render}=setupPaint(C,R);const sf=R.psf,sc=sf.L.scuff;
+ const t=await C.pickTool('p400',['p80','sponge','polisher'],'Scuff the old paint so new paint will stick. Which paper?');
+ C.cursor('sander');C.hint('Sand the <b>whole body</b> until it’s evenly dull.');C.meter('sc','Scuffed',.93);
+ await new Promise(res=>{let last=null,done=false;dragOn(cv,{down(p){last=p},move(p){if(done||!last)return;const mv=Math.min(30,dist(p,last));last=p;sf.each(p.x,p.y,34,(k,w)=>{sc[k]=Math.min(1,sc[k]+mv*.02*(.4+w))});if(Math.random()<.2)Snd.noise(.05,.03,2400);if(Math.random()<.25)C.fx(`<circle cx="${p.x+rnd(-20,20)}" cy="${p.y+rnd(-16,16)}" r="${rnd(3,6)}" fill="#efe5d0" class="puff"/>`,1000);render();
+  const f=sf.frac(k=>sc[k]>.8);C.setMeter('sc',f);if(f>=.93){done=true;res()}},up(){last=null}})});
+ C.cursor(null);C.acc(1);C.hint('Masking the seat, lights & tail-light…');R.tape=true;setupPaint(C,R);C.good('Prepped & masked!');await C.wait(900);
+}
+async function sprayCoat(C,R,layer,opts){
+ const {cv,render}=setupPaint(C,R);const sf=R.psf,L=sf.L[layer];
+ await C.pickTool('spraygun',['sponge','polisher','sander'],opts.prompt);
+ C.cursor('spraygun');C.hint(opts.hint);
+ const hv=hasUpg('hvlp'),rate=hv?2.6:3.2,sig=hv?24:20,drip=hv?2.35:2.05,lo=.75;
+ C.meter('cov','Even coverage',.9);C.meter('runs','Runs / drips');C.meter('os','Overspray');
+ let pos=null,runs=0,over=0,hissT=0,fin=false;const dripped=new Uint8Array(sf.n);
+ dragOn(cv,{down(p){pos=p},move(p){pos=p},up(){pos=null}});
+ const stat=()=>sf.frac(k=>L[k]>=lo&&L[k]<drip);
+ C.frame(dt=>{if(fin)return false;if(!pos)return;const now=performance.now();if(now>hissT){hissT=now+140;Snd.hiss(.16,.035)}
+  if(!sf.inside(pos.x,pos.y))over+=dt;
+  sf.each(pos.x,pos.y,sig*2.4,(k,w)=>{const dd=(1-w)*sig*2.4;L[k]+=rate*dt*Math.exp(-dd*dd/(2*sig*sig));
+   if(L[k]>drip&&!dripped[k]){runs++;const c=sf.cellXY(k);sf.each(c.x,c.y,26,kk=>dripped[kk]=1);const col=opts.dripCol||`rgb(${R.newRGB.join(',')})`;C.over(`<path d="M${c.x-5},${c.y} L${c.x+5},${c.y} L${c.x+3},${c.y+18} Q${c.x},${c.y+28} ${c.x-3},${c.y+18}Z" fill="${col}" ${S(1.2)} opacity=".9"/>`);C.toast('A run! Keep the gun moving.','bad');Snd.buzz()}});
+  for(let i=0;i<2;i++)C.fx(`<circle cx="${pos.x+rnd(-sig*1.6,sig*1.6)}" cy="${pos.y+rnd(-sig*1.6,sig*1.6)}" r="${rnd(1.5,3.5)}" fill="${opts.mist}" opacity=".7" class="foam"/>`,500);
+  render();C.setMeter('cov',stat());C.setMeter('runs',runs/6,String(runs),runs>0);C.setMeter('os',over/3,over.toFixed(1)+'s',over>1)});
+ await new Promise(res=>{C.btn('✓ Done spraying',()=>{const cv2=stat();if(cv2<.75){C.toast(`Only ${Math.round(cv2*100)}% covered — keep going`,'meh');return}
+  if(cv2<.9)C.mistake('Thin, patchy areas left behind.');if(runs>=3)C.mistake('Too many runs in the finish.');
+  const a=clamp(cv2-runs*.04-over*.04,0,1);C.acc(a);R.paintQ.push(a);fin=true;res()},'sage')});
+ C.cursor(null);await C.wait(300);
+}
+async function l5primer(C,R){R.paintQ=[];await sprayCoat(C,R,'pr',{prompt:'Primer time! What applies an even coat?',hint:'Hold & sweep in <b>smooth, steady passes</b>. Linger and you get runs; spray off the body and you waste paint.',mist:'#c0bcb8',dripCol:'#c0bcb8'});C.good('Primed!');}
+async function l5paint(C,R){
+ const avail=Object.keys(COLORS).filter(c=>owns('color_'+c));
+ setupPaint(C,R);
+ const ch=await C.choose(avail.map(c=>({label:`<span style="display:inline-block;width:18px;height:18px;border-radius:50%;background:${COLORS[c].hex};border:2px solid #3a2a22;vertical-align:-3px"></span> ${COLORS[c].name}`,value:c,cls:'cream'})),'Pick your new colour!');
+ R.newColor=ch;R.newRGB=hex2rgb(COLORS[ch].hex);
+ await sprayCoat(C,R,'pa',{prompt:`${COLORS[ch].name} it is! Grab the right tool.`,hint:'Build the colour with <b>overlapping passes</b> until it’s solid and even.',mist:COLORS[ch].hex});C.good('Gorgeous colour!');
+}
+async function l5clear(C,R){await sprayCoat(C,R,'cl',{prompt:'Lock it in with a glossy clear coat. Tool?',hint:'Clear coat shows every mistake — <b>even, steady passes</b>!',mist:'#ffffff',dripCol:'rgba(255,255,255,.75)'});C.good('Clear coat on!');}
+async function l5polish(C,R){
+ R.tape=false;const {cv,render}=setupPaint(C,R);const sf=R.psf,gl=sf.L.gl;
+ await C.pickTool('polisher',['sander','sponge','spraygun'],'Last step — bring out the shine!');
+ C.cursor('polisher');C.hint('Move the polisher in <b>small circles</b>. Straight lines barely shine!');C.meter('gl','Shine',.88);
+ const sheen=C.over(`<g transform="translate(${PAINT_T.x},${PAINT_T.y}) scale(${PAINT_T.s})" opacity="0"><path d="M64,140 C88,126 124,121 158,125 M318,84 C313,118 311,150 314,186" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/></g>`).firstChild;
+ let pts=[];
+ await new Promise(res=>{let done=false;dragOn(cv,{down(p){pts=[p]},move(p){if(done)return;const l=pts[pts.length-1];if(dist(p,l)<3)return;pts.push(p);if(pts.length>3)pts.shift();
+   if(pts.length===3){const a1=Math.atan2(pts[1].y-pts[0].y,pts[1].x-pts[0].x),a2=Math.atan2(pts[2].y-pts[1].y,pts[2].x-pts[1].x);let da=Math.abs(a2-a1);if(da>Math.PI)da=2*Math.PI-da;
+    const amt=.02+da*.55;sf.each(p.x,p.y,36,(k,w)=>{gl[k]=Math.min(1.2,gl[k]+amt*(.3+w)*.35)});if(Math.random()<.15)Snd.tone(220+da*200,.05,'sine',.03)}
+   render();const f=sf.frac(k=>gl[k]>=1);C.setMeter('gl',f);sheen.setAttribute('opacity',f*.8);if(f>=.88){done=true;res()}},up(){pts=[]}})});
+ C.cursor(null);C.acc(1);
+ const q=R.paintQ.reduce((a,b)=>a+b,0)/R.paintQ.length;const grade=q>.92?'S':q>.82?'A':q>.68?'B':'C';
+ G.save.eq.color=R.newColor;persist();
+ C.clear();C.add(`<g transform="translate(230,70) scale(1.2)">${vespa({})}</g>`);C.confetti(480,200);C.confetti(300,260);C.confetti(650,240);
+ C.panel(640,60,290,200);C.add(`<text x="785" y="104" text-anchor="middle" class="lblB">Paint quality</text><text x="785" y="190" text-anchor="middle" font-family="Gaegu" font-weight="700" font-size="84" fill="${grade==='S'||grade==='A'?'#5f8a3a':grade==='B'?'#b8962a':PAL.red}">${grade}</text><text x="785" y="235" text-anchor="middle" class="lbl">${Math.round(q*100)}% finish score</text>`);
+ C.hint(`Paint quality <b>${grade}</b>! Your Vespa is now <b>${COLORS[R.newColor].name}</b>.`,'wow');Snd.ding();await C.wait(2600);
+}
+
+// ================= LEVEL DEFINITIONS =================
+const LEVELS=[
+ {id:1,name:'Flat Tire',sub:'Find it, patch it, pump it, bolt it.',par:85,icon:'wheel',
+  tasks:['Inspect for the puncture','Remove the wheel','Patch or replace the tube','Inflate to the right pressure','Refit & torque in a star pattern'],
+  tut:['Our Vespa has a flat! Rub <b>soapy water</b> over the tyre — bubbles show exactly where air escapes.','Small nail holes get a <b>patch</b>. Long tears need a <b>new inner tube</b>.','Pump to the <b>green zone</b> on the gauge. Overshot? Use the valve.','Tighten the wheel nuts in a <b>star pattern</b> (skip one each time) and release the torque wrench in the green.','Wrong tools and wrong moves cost stars — speed and precision earn them!'],
+  setup(R){R.punct={ang:rnd(-165,-15),type:Math.random()<.55?'nail':'tear'}},
+  steps:[l1inspect,l1remove,l1fix,l1inflate,l1reinstall]},
+ {id:2,name:'Engine Trouble',sub:'Diagnose, clean, rebuild, start.',par:150,icon:'engine',
+  tasks:['Open the engine cover','Diagnose 4 components','Clean or replace parts','Reassemble the engine','Start it up & verify'],
+  tut:['The engine cranks but won’t fire. Pop off the <b>side cowl</b> to get at it.','Inspect the <b>spark plug, air filter, carburettor and fuel line</b> — each needs the right inspection tool.','Black sooty plug → <b>clean</b>. Worn, rounded electrode → <b>replace</b>. Dusty filter → <b>clean</b>. Torn filter → <b>replace</b>. Gunky jet → <b>clean</b>. Cracked hose → <b>replace</b>.','Rebuild in a sensible order (carb before the things that attach to it!).','To start a cold engine: <b>fuel ON, choke ON, ignition ON</b>, then kick in the green. Turn the choke off once it runs.'],
+  setup(R){const faults={plug:pick(['fouled','worn']),filter:pick(['dusty','torn']),carb:'clogged',fuel:'cracked'};const keys=shuffle(Object.keys(faults)).slice(0,rint(2,3));R.st={plug:'good',filter:'good',carb:'good',fuel:'good'};keys.forEach(k=>R.st[k]=faults[k]);if(!keys.includes('plug')&&!keys.includes('carb'))R.st.carb='clogged'},
+  steps:[l2open,l2diag,l2repair,l2assemble,l2start]},
+ {id:3,name:'Electrics',sub:'Volts, fuses, wires & lights.',par:170,icon:'bolt',
+  tasks:['Test battery voltage','Find & replace blown fuses','Reconnect loose wires','Repair damaged wiring','Install a new battery (if needed)','Test lights, horn & ignition'],
+  tut:['Lights and ignition are dead. Start with the <b>multimeter</b>: DC volts, red probe on <b>+</b>, black on <b>−</b>. Healthy is <b>12.4 V or more</b>.','Test each fuse for continuity. Replace blown ones with the <b>exact same amp rating</b>.','Match wire colours: <b>red</b> battery+, <b>black</b> ground, <b>yellow</b> headlight, <b>blue</b> indicators, <b>green</b> horn.','To repair wiring: <b>strip → crimp → heat-shrink</b> (don’t melt it!).','Battery swap rule: disconnect <b>negative first</b>, connect <b>positive first</b>.'],
+  setup(R){R.battV=Math.random()<.5?rnd(12.5,12.8):rnd(10.9,11.9);const amps=shuffle([5,'7.5',10,15]);const blown=shuffle([0,1,2,3]).slice(0,rint(1,2));R.fuses=amps.map((a,i)=>({amp:a,blown:blown.includes(i)}));R.loose=shuffle(WIRES.map(w=>w.id)).slice(0,3);const a=rnd(200,380);R.damage=[a,a+rnd(220,360)];R.fault=pick(['head','left','horn']);R.battNeed=R.battV<12.4},
+  steps:[l3battery,l3fuses,l3wires,l3repair,l3install,l3test]},
+ {id:4,name:'Body Work',sub:'Hammer, fill, sand, refit.',par:160,icon:'hammer',
+  tasks:['Remove the damaged panel','Hammer out the dents','Mix & apply body filler','Sand to a smooth finish','Refit the panel'],
+  tut:['A minor bump left the side panel dented. Undo the screws by drawing <b>anticlockwise circles</b> around them.','On the bench, tap as the <b>ring meets the gold target</b>. Precise hits push the dent out — sloppy ones add dings.','Mix filler with about <b>3 drops</b> of hardener, then spread it only over the <b>low spots</b>.','Sand everything smooth — but keep moving or you’ll <b>burn through</b> to bare metal.','Refit the panel exactly on its outline and screw it in <b>clockwise</b>.'],
+  setup(R){const cands=shuffle([[60,182],[96,150],[140,140],[184,166],[124,186],[168,192],[70,160]]);const out=[];for(const c of cands){if(out.every(o=>Math.hypot(o[0]-c[0],o[1]-c[1])>40))out.push(c);if(out.length===3)break}R.dents=out.map(([lx,ly])=>({lx,ly,depth:rint(2,3),...toBench(lx,ly)}));R.n=1},
+  steps:[l4remove,l4hammer,l4filler,l4sand,l4refit]},
+ {id:5,name:'Fresh Paint',sub:'Wash, prep, spray, shine.',par:200,icon:'spray',
+  tasks:['Wash & clean the body','Sand the old paint','Spray the primer','Spray your new colour','Apply clear coat','Polish to a shine'],
+  tut:['Time for a makeover! First <b>wash</b> away the grime, then <b>scuff</b> the old paint with fine paper.','The spray gun builds paint wherever it lingers. Use <b>smooth, steady, overlapping passes</b>.','Too slow → <b>runs</b>. Off the body → <b>overspray</b>. Too fast → <b>patchy</b>.','Polish with <b>small circular motions</b> for a mirror shine.','Finishing this job unlocks <b>new colours & finishes</b> in the shop!'],
+  setup(R){},
+  steps:[l5wash,l5sand,l5primer,l5paint,l5clear,l5polish]}
+];
+// ================= UI / FLOW =================
+const SHOP=[
+ {id:'tool_pump',cat:'Tools',name:'Precision Pump',price:120,desc:'Half-size pump strokes — easier to hit the right pressure.',pv:()=>toolIcon('pump',96)},
+ {id:'tool_gloves',cat:'Tools',name:'Steady-Hand Gloves',price:150,desc:'Wider timing windows for torque, hammer & kick-start.',pv:()=>toolIcon('hand',96)},
+ {id:'tool_meter',cat:'Tools',name:'Auto-Range Multimeter',price:140,desc:'Sets itself to DC volts automatically.',pv:()=>toolIcon('multimeter',96)},
+ {id:'tool_sander',cat:'Tools',name:'Orbital Sander',price:180,desc:'Sands faster and resists burn-through.',pv:()=>toolIcon('sander',96)},
+ {id:'tool_hvlp',cat:'Tools',name:'HVLP Spray Gun',price:220,desc:'Softer, wider spray — far fewer runs.',pv:()=>toolIcon('spraygun',96)},
+ ...Object.entries(HANDLES).map(([k,h],i)=>({id:'handle_'+k,cat:'Tool Style',name:k[0].toUpperCase()+k.slice(1)+' Grips',price:i?40+i*10:0,desc:'Re-colour every tool handle in your kit.',eq:['handle',k],pv:()=>`<svg viewBox="0 0 120 60" width="150" height="75"><g filter="url(#rough)">${TOOLS.wrench.svg(h)}<g transform="translate(60,0)">${TOOLS.screwdriver.svg(h)}</g></g></svg>`})),
+ ...Object.entries(MODELS).map(([k,m],i)=>({id:'model_'+k,cat:'Vespas',name:m.name,price:[0,300,400][i],desc:m.desc,eq:['model',k],pv:()=>`<svg viewBox="-10 -20 420 300" width="170"><g>${vespa({model:k})}</g></svg>`})),
+ ...Object.entries(GARAGES).map(([k,g],i)=>({id:'garage_'+k,cat:'Garages',name:g.name,price:[0,200,250,250][i],desc:'A fresh place to wrench.',eq:['garage',k],pv:()=>`<svg viewBox="0 0 160 100" width="170"><rect width="160" height="100" fill="${g.wall}"/><rect y="74" width="160" height="26" fill="${g.floor}"/><path d="M0,6 Q80,30 160,6" fill="none" stroke="${INK}" stroke-width="1.5"/>${[20,50,80,110,140].map((x,j)=>`<path d="M${x-8},${8+Math.sin(Math.PI*x/160)*16} l16,0 l-8,13z" fill="${j%2?PAL.gold:g.acc}" stroke="${INK}" stroke-width="1"/>`).join('')}<path d="${starPath(130,50,8)}" fill="${PAL.gold}"/></svg>`})),
+ ...Object.entries(COLORS).map(([k,c])=>({id:'color_'+k,cat:'Paint',name:c.name,price:['cream','pink','sage','powder'].includes(k)?0:{butter:90,navy:120,coral:150,mint:130,mauve:140}[k],desc:'Spray it on in the Fresh Paint job.',needs5:true,eq:['color',k],pv:()=>`<svg viewBox="-10 -20 420 300" width="170">${vespa({color:k})}</svg>`})),
+ ...Object.entries(FINISHES).map(([k,n])=>({id:'finish_'+k,cat:'Finishes',name:n,price:{gloss:0,matte:120,pearl:200,metallic:220}[k],desc:'Changes how your paint catches the light.',needs5:true,eq:['finish',k],pv:()=>`<svg viewBox="-10 -20 420 300" width="170">${vespa({finish:k})}</svg>`}))
+];
+const ACH=[
+ {id:'first',name:'First Fix',desc:'Complete your first repair.'},
+ {id:'flawless',name:'Flawless',desc:'Finish a job with zero mistakes.'},
+ {id:'speed',name:'Speed Wrench',desc:'Finish a job in under 60% of par time.'},
+ {id:'three',name:'Three-Star Mechanic',desc:'Earn ★★★ on any job.'},
+ {id:'precise',name:'Hairline Precision',desc:'Hit 97%+ accuracy on a job.'},
+ {id:'allclear',name:'Road Ready',desc:'Complete all five repairs.'},
+ {id:'perfect',name:'Garage Legend',desc:'★★★ on every job.'},
+ {id:'collector',name:'Tool Collector',desc:'Own every tool upgrade.'},
+ {id:'rainbow',name:'Rainbow Garage',desc:'Own 7 paint colours.'},
+ {id:'rich',name:'Piggy Bank',desc:'Hold 500 coins at once.'}
+];
+function show(name){$$('.screen').forEach(s=>s.classList.toggle('on',s.id==='scr-'+name));window.scrollTo({top:0});
+ if(name==='menu')drawMenu();if(name==='levels')drawLevels();if(name==='shop')drawShop();if(name==='ach')drawAch();updateCoins()}
+function updateCoins(){$('#coinTxt').textContent=G.save.coins}
+function starsStr(n){return [0,1,2].map(i=>`<span class="star ${i<n?'on':''}">★</span>`).join('')}
+function drawMenu(){
+ $('#hero').innerHTML=`<svg viewBox="0 0 960 540" preserveAspectRatio="xMidYMid slice"><g>${bgSVG()}</g>
+  <g transform="translate(270,262) scale(1.02)">${vespa({})}</g>
+  <g transform="translate(150,198) scale(1)">${mascot('happy')}</g>
+  <g transform="translate(26,398) scale(.72)">${cow()}</g>
+  <path d="${starPath(880,70,16)}" fill="${PAL.gold}" ${S(2)}/><path d="${starPath(720,120,9)}" fill="${PAL.pinkL}" ${S(1.5)}/></svg>
+  <div class="title-wrap"><h1>Vespa<br>Fix-Up Garage</h1><p>Five repairs. Fifteen stars. One very cute scooter.</p></div>
+  <div class="menuBtns"><button class="btn gold" id="playBtn">▶ Repair Jobs</button><button class="btn sage" data-go="shop">Shop</button><button class="btn cream" data-go="ach">Achievements</button></div>`;
+ $('#playBtn').onclick=()=>{Snd.init();Snd.click();show('levels')};bindGo($('#hero'));
+}
+function lvlIcon(l){const ic={wheel:`<g transform="translate(100,60) scale(.3)">${tyreClose(0,0,170)}</g>`,engine:`<g transform="translate(20,0) scale(.82)">${engineMini()}</g><g transform="translate(130,30)">${TOOLS.plugsocket.svg(handle())}</g>`,bolt:`<g transform="translate(30,30) scale(.25)">${batterySVG(0,0)}</g><path d="M140,20 L118,64 L136,64 L124,104 L160,52 L142,52 L156,20Z" fill="${PAL.gold}" ${S(2.4)}/>`,hammer:`<g transform="translate(20,-20) scale(.6)"><path d="${VP.cowl}" fill="${COLORS[G.save.eq.color].hex}" ${S(3)}/><ellipse cx="110" cy="166" rx="18" ry="12" fill="url(#dentG)"/></g><g transform="translate(120,20) scale(1.2)">${TOOLS.dolly.svg(handle())}</g>`,spray:`<g transform="translate(110,18) scale(1.3)">${TOOLS.spraygun.svg(handle())}</g>${Object.values(COLORS).slice(0,6).map((c,i)=>`<circle cx="${30+(i%3)*28}" cy="${40+Math.floor(i/3)*30}" r="13" fill="${c.hex}" ${S(2)}/>`).join('')}`}[l.icon];
+ return `<svg class="ic" viewBox="0 0 200 120"><path d="${starPath(100,60,58,.5)}" fill="${PAL.pinkL}" opacity=".6"/><g filter="url(#rough)">${ic}</g></svg>`}
+function drawLevels(){const g=$('#levelGrid');g.innerHTML='';
+ LEVELS.forEach(l=>{const locked=l.id>G.save.unlocked,best=G.save.best[l.id];const d=document.createElement('div');d.className='card lvl'+(locked?' locked':'');
+  d.innerHTML=`<div class="num">${l.id}</div>${lvlIcon(l)}<h3>${l.name}</h3><p>${l.sub}</p><div style="display:flex;justify-content:space-between;align-items:center"><span class="stars">${starsStr(best?best.stars:0)}</span><span style="font-size:15px;opacity:.75">${best?'best '+fmtT(best.time):'par '+fmtT(l.par)}</span></div>${best?`<div style="font-size:15px;margin-top:4px;opacity:.75">${l.steps.length} tasks · tap to replay</div>`:`<div style="font-size:15px;margin-top:4px;opacity:.75">${l.steps.length} tasks</div>`}`;
+  if(!locked)d.onclick=()=>{Snd.init();Snd.click();startLevel(l.id)};g.appendChild(d)})}
+let shopTab='Tools';
+function drawShop(){const cats=[...new Set(SHOP.map(s=>s.cat))];const done5=!!G.save.best[5];
+ $('#shopTabs').innerHTML=cats.map(c=>`<button class="btn cream ${c===shopTab?'on':''}" data-tab="${c}">${c}</button>`).join('');
+ $$('#shopTabs .btn').forEach(b=>b.onclick=()=>{shopTab=b.dataset.tab;Snd.click();drawShop()});
+ const grid=$('#shopGrid');grid.innerHTML='';
+ SHOP.filter(s=>s.cat===shopTab).forEach(it=>{const own=owns(it.id),locked=it.needs5&&!done5&&!own;const eqd=it.eq&&G.save.eq[it.eq[0]]===it.eq[1];
+  const d=document.createElement('div');d.className='card item';
+  d.innerHTML=`<div class="pv">${it.pv()}</div><h3>${it.name}</h3><p>${it.desc}${locked?'<br><b>🔒 Finish “Fresh Paint” to unlock.</b>':''}</p><div class="row"><span>${own?'<span class="tag">Owned</span>':`<b>${it.price}</b> coins`}</span><span class="act"></span></div>`;
+  const act=d.querySelector('.act');
+  if(!own&&!locked){const b=document.createElement('button');b.className='btn gold sm';b.textContent='Buy';b.disabled=G.save.coins<it.price;b.onclick=()=>{if(G.save.coins<it.price)return;G.save.coins-=it.price;G.save.owned[it.id]=1;if(it.eq)G.save.eq[it.eq[0]]=it.eq[1];Snd.coin();persist();checkAch();drawShop();updateCoins()};act.appendChild(b)}
+  else if(own&&it.eq){const b=document.createElement('button');b.className='btn sm '+(eqd?'sage':'cream');b.textContent=eqd?(it.cat==='Paint'?'On your Vespa':'Equipped'):(it.cat==='Paint'?'Respray':'Equip');b.disabled=eqd;b.onclick=()=>{G.save.eq[it.eq[0]]=it.eq[1];Snd.click();persist();drawShop()};act.appendChild(b)}
+  grid.appendChild(d)});
+ if(shopTab==='Vespas'){const d=document.createElement('div');d.className='card item';const on=G.save.eq.decals;d.innerHTML=`<div class="pv"><svg viewBox="0 0 120 80" width="120"><path d="${starPath(40,40,26,.42)}" fill="${PAL.pink}" ${S(2.4)}/><path d="${starPath(86,30,14,.42)}" fill="${PAL.pink}" ${S(2)}/></svg></div><h3>Star Decals</h3><p>Dusty-pink star stickers on the bodywork. Free!</p><div class="row"><span class="tag">Owned</span><button class="btn sm ${on?'sage':'cream'}">${on?'On':'Off'}</button></div>`;d.querySelector('button').onclick=()=>{G.save.eq.decals=!G.save.eq.decals;persist();drawShop()};grid.appendChild(d)}
+}
+function medal(on){return `<svg class="medal" viewBox="0 0 60 60"><path d="M18,2 L26,22 L34,22 L42,2" fill="${PAL.pink}" ${S(2)}/><circle cx="30" cy="36" r="20" fill="${on?PAL.gold:'#cbbf9f'}" ${S(2.4)}/><path d="${starPath(30,36,11,.45)}" fill="${PAL.cream}" ${S(1.6)}/></svg>`}
+function drawAch(){$('#achGrid').innerHTML=ACH.map(a=>`<div class="card ${G.save.ach[a.id]?'':'off'}">${medal(G.save.ach[a.id])}<div><h3>${a.name}</h3><p>${a.desc}</p></div></div>`).join('')}
+function unlockAch(id,list){if(!G.save.ach[id]){G.save.ach[id]=1;list&&list.push(ACH.find(a=>a.id===id).name)}}
+function checkAch(res,list=[]){const s=G.save;
+ if(res){unlockAch('first',list);if(res.mist===0)unlockAch('flawless',list);if(res.time<res.par*.6)unlockAch('speed',list);if(res.stars===3)unlockAch('three',list);if(res.accuracy>=.97)unlockAch('precise',list)}
+ if(LEVELS.every(l=>s.best[l.id]))unlockAch('allclear',list);if(LEVELS.every(l=>s.best[l.id]&&s.best[l.id].stars===3))unlockAch('perfect',list);
+ if(['pump','gloves','meter','sander','hvlp'].every(hasUpg))unlockAch('collector',list);if(Object.keys(COLORS).filter(c=>owns('color_'+c)).length>=7)unlockAch('rainbow',list);if(s.coins>=500)unlockAch('rich',list);
+ persist();return list}
+function bindGo(root){(root||document).querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{Snd.init();Snd.click();if(RUN)abortRun();show(b.dataset.go)})}
+
+// ---------- level flow ----------
+function updateHUD(){if(!RUN)return;$('#hudTime').textContent=fmtT(RUN.elapsed);$('#hudMist').textContent=RUN.mist;$('#hudTime').style.color=RUN.elapsed>RUN.def.par?'#a8432f':''}
+setInterval(()=>{if(RUN&&!RUN.paused&&!RUN.finished){RUN.elapsed+=.25;updateHUD()}},250);
+function abortRun(){if(RUN){RUN.tok=null;RUN=null}Snd.stopLoop();$('#modal').hidden=true;$('#cursorG').innerHTML=''}
+function setTask(i,cls){const li=$$('#tasks li')[i];if(!li)return;li.className=cls}
+function tutorial(def,first){return new Promise(res=>{const m=$('#modal');let i=0;RUN.paused=true;
+ const draw=()=>{m.innerHTML=`<div class="card"><svg viewBox="10 20 140 310" width="100%">${mascot(i===def.tut.length-1?'wow':'happy')}</svg><div><h3>${first?'Job '+def.id+': '+def.name:'How to: '+def.name}</h3><div class="dots">${def.tut.map((_,j)=>`<i class="${j===i?'on':''}"></i>`).join('')}</div><div class="txt">${def.tut[i]}</div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px">${i>0?'<button class="btn cream sm" id="tPrev">Back</button>':''}<button class="btn gold" id="tNext">${i<def.tut.length-1?'Next →':"Let's fix it!"}</button></div></div></div>`;
+  $('#tNext').onclick=()=>{Snd.click();if(i<def.tut.length-1){i++;draw()}else{m.hidden=true;if(RUN)RUN.paused=false;res()}};const p=$('#tPrev');if(p)p.onclick=()=>{i--;draw()}};
+ m.hidden=false;draw()})}
+async function startLevel(n,opt={}){
+ abortRun();const def=LEVELS[n-1];
+ RUN={n,def,tok:{},mist:0,toolErr:0,acc:[],elapsed:0,paused:false,keys:[],tut:!G.save.tut[n],finished:false};
+ const C=makeC(RUN);show('play');$('#bg').innerHTML=bgSVG();C.clear();setMascot('happy');
+ $('#lvNum').textContent='Job '+n+' of 5';$('#lvTitle').textContent=def.name;$('#hudPar').textContent=fmtT(def.par);updateHUD();
+ $('#tasks').innerHTML=def.tasks.map(t=>`<li>${t}</li>`).join('');
+ def.setup(RUN);
+ if(RUN.tut)await tutorial(def,true);
+ if(!C.alive())return;
+ for(let i=opt.from||0;i<def.steps.length;i++){for(let j=0;j<i;j++)setTask(j,'done');setTask(i,'on');await def.steps[i](C,RUN);if(!C.alive())return;setTask(i,'done');Snd.ding();await C.wait(350)}
+ finishLevel(C);
+}
+function finishLevel(C){
+ const R=RUN;R.finished=true;const def=R.def;Snd.stopLoop();
+ const accuracy=R.acc.length?R.acc.reduce((a,b)=>a+b,0)/R.acc.length:1;
+ const t=R.elapsed,timeScore=t<=def.par?1:clamp(1-(t-def.par)/(def.par*1.2),0,1),mistScore=clamp(1-R.mist*.12,0,1);
+ const total=accuracy*.42+timeScore*.28+mistScore*.3;
+ const stars=(total>=.86&&R.mist<=2)?3:total>=.62?2:1;
+ const prev=G.save.best[def.id];const first=!prev;
+ let coins=stars*25+def.id*5+(R.mist===0?15:0)+(t<def.par*.6?10:0);if(!first&&prev.stars>=stars)coins=Math.round(coins*.5);
+ G.save.coins+=coins;
+ if(!prev||stars>prev.stars||(stars===prev.stars&&t<prev.time))G.save.best[def.id]={stars:Math.max(stars,prev?prev.stars:0),time:prev?Math.min(prev.time,t):t};
+ G.save.unlocked=Math.max(G.save.unlocked,Math.min(5,def.id+1));G.save.tut[def.id]=1;G.save.plays++;
+ const unlocks=[];
+ if(def.id===5){const gift=['butter','mint','coral'].slice(0,stars);gift.forEach(c=>{if(!owns('color_'+c)){G.save.owned['color_'+c]=1;unlocks.push(COLORS[c].name+' paint')}});if(first)unlocks.push('Paint & finish shop');}
+ const res={stars,time:t,par:def.par,mist:R.mist,accuracy};
+ const achs=checkAch(res);persist();
+ RUN=null;showResult(def,res,coins,unlocks,achs,R);
+}
+function showResult(def,res,coins,unlocks,achs,R){
+ show('result');const bigStar=`<svg viewBox="0 0 100 100"><path d="${starPath(50,52,46,.45)}" fill="${PAL.gold}" ${S(4)} filter="url(#rough)"/></svg>`;
+ const tScore=res.time<=res.par?1:clamp(1-(res.time-res.par)/(res.par*1.2),0,1);
+ const msg=res.stars===3?'Perfect repair!':res.stars===2?'Nicely done!':'Fixed — but a bit rough.';
+ $('#resultCard').innerHTML=`<div><svg viewBox="0 0 460 340" width="100%"><g transform="translate(30,40) scale(.92)">${vespa({})}</g><g transform="translate(320,130) scale(.75)">${cow()}</g></svg></div>
+ <div><div class="hand" style="opacity:.7">Job ${def.id} · ${def.name}</div><h2>${msg}</h2>
+ <div class="bigStars">${[0,1,2].map(i=>`<span class="s" id="bs${i}">${bigStar}</span>`).join('')}</div>
+ <div class="rows">
+  <span>⏱ Time</span><div class="mini"><i style="width:${tScore*100}%"></i></div><b>${fmtT(res.time)} <small>/ par ${fmtT(res.par)}</small></b>
+  <span>🎯 Accuracy</span><div class="mini"><i style="width:${res.accuracy*100}%"></i></div><b>${Math.round(res.accuracy*100)}%</b>
+  <span>✗ Mistakes</span><div class="mini"><i style="width:${clamp(1-res.mist*.12,0,1)*100}%"></i></div><b>${res.mist}</b>
+  <span>🔧 Tool use</span><div class="mini"><i style="width:${clamp(1-R.toolErr*.2,0,1)*100}%"></i></div><b>${R.toolErr?R.toolErr+' wrong pick'+(R.toolErr>1?'s':''):'spot on'}</b>
+ </div>
+ <div class="coinsWon">+${coins} coins</div>
+ ${unlocks.length?`<div class="unlocks">✶ Unlocked: <b>${unlocks.join(', ')}</b></div>`:''}
+ ${achs.length?`<div class="unlocks">🏅 Achievement${achs.length>1?'s':''}: <b>${achs.join(', ')}</b></div>`:''}
+ <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="btn cream" id="rRe">↻ Replay</button>${def.id<5?'<button class="btn gold" id="rNext">Next job →</button>':''}<button class="btn sage" data-go="levels">All jobs</button><button class="btn cream" data-go="shop">Shop</button></div></div>`;
+ bindGo($('#resultCard'));$('#rRe').onclick=()=>{Snd.click();startLevel(def.id)};const nx=$('#rNext');if(nx)nx.onclick=()=>{Snd.click();startLevel(def.id+1)};
+ for(let i=0;i<res.stars;i++)setTimeout(()=>{$('#bs'+i)?.classList.add('on');Snd.star(i)},400+i*450);
+ setTimeout(()=>Snd.coin(),400+res.stars*450);
+}
+
+// ---------- init ----------
+loadSave();Snd.on=G.save.sound!==false;
+$('#sndBtn').textContent=Snd.on?'🔊':'🔈';
+$('#sndBtn').onclick=()=>{Snd.on=!Snd.on;G.save.sound=Snd.on;persist();$('#sndBtn').textContent=Snd.on?'🔊':'🔈';if(!Snd.on)Snd.stopLoop();Snd.init();Snd.click()};
+$('#brandBtn').onclick=()=>{abortRun();show('menu')};
+$('#quitBtn').onclick=()=>{abortRun();show('levels')};
+$('#restartBtn').onclick=()=>{if(RUN){const n=RUN.n;startLevel(n)}};
+$('#helpBtn').onclick=()=>{if(RUN&&!RUN.paused)tutorial(RUN.def,false)};
+bindGo();
+const hashMap={jobs:'levels',shop:'shop',achievements:'ach'};
+show(hashMap[location.hash.slice(1)]||'menu');
+</script>
+</body></html>
